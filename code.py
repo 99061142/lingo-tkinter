@@ -30,7 +30,7 @@ class Window(tk.Tk):
             guessed_row_word = []
 
             # For every character inside the word
-            for col in range(len(self._word)):
+            for col in range(self.word_length):
                 # Let the user change the text inside the label
                 character_guess = tk.StringVar()
                 guessed_row_word.append(character_guess)
@@ -87,12 +87,33 @@ class Game(Window):
         super().start() # Starts the game
 
     def key_pressed(self, key):
-        # For every character inside the row the user is on 
+        # For every character inside the row
         for i, guessed_key in enumerate(self._guessed_words[self._guess]):
+            if(key == "backspace"):
+                # Delete the last character that was guessed in the row
+                self._guessed_words[self._guess][self.firstly_empty_column - 1].set('')
+                break
+
             # If the column is not already guessed (length of the word was not reached)
             if(not guessed_key.get()):
-                self._guessed_words[self._guess][i].set(key) # Change the character inside the row to the key the user has guessed
+                # Change the character inside the row to the key the user has guessed
+                self._guessed_words[self._guess][i].set(key)
                 break
+                
+    
+    @property
+    def firstly_empty_column(self):
+        # For every character inside the row
+        for i, guessed_key in enumerate(self._guessed_words[self._guess]):
+            # Return the index that's empty
+            if(not guessed_key.get()):
+                return i
+
+        return self.word_length
+
+    @property
+    def word_length(self):
+        return len(self._word)
 
 
 
