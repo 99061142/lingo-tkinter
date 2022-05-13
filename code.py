@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import ttk
 from random_word import RandomWords
+from tkinter import messagebox
 
 class Window(tk.Tk):
     _bg = "#121212"
@@ -71,6 +72,9 @@ class Window(tk.Tk):
                     command= lambda key=key: self.key_pressed(key)
                 ).grid(row=row, column=col, padx=3)
 
+    def error_message(self, message:str):
+        messagebox.showerror("", message) # Show the error message
+
     def start(self):
         # Show the game
         self.game_window_frame.pack()    
@@ -86,12 +90,21 @@ class Game(Window):
     def start(self):
         super().start() # Starts the game
 
-    def key_pressed(self, key):
+    def key_pressed(self, key:str):
         # For every character inside the row
         for i, guessed_key in enumerate(self._guessed_words[self._guess]):
             if(key == "backspace"):
                 # Delete the last character that was guessed in the row
                 self._guessed_words[self._guess][self.firstly_empty_column - 1].set('')
+                break
+            
+            elif(key == "enter"):
+                # If the user guessed every column
+                if(self.firstly_empty_column == self.word_length):
+                    self.check_guessed_word()
+                    self._guess += 1 # Go to the next row
+                else:
+                    self.error_message("Not enough letters") # Show the error message
                 break
 
             # If the column is not already guessed (length of the word was not reached)
@@ -99,7 +112,10 @@ class Game(Window):
                 # Change the character inside the row to the key the user has guessed
                 self._guessed_words[self._guess][i].set(key)
                 break
-                
+    
+    def check_guessed_word(self):
+        guessed_word = [x.get() for x in self._guessed_words[self._guess]] # Word the user has guessed
+
     
     @property
     def firstly_empty_column(self):
