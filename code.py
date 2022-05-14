@@ -94,13 +94,7 @@ class Game(Window):
 
     def key_pressed(self, key:str):
         # For every character inside the row
-        for i, guessed_key in enumerate(self._guessed_words[self._guess]):
-            # Add the pressed key at an empty column (if possible)
-            if(not guessed_key.get()):
-                # Change the character inside the row to the key the user has guessed
-                self._guessed_words[self._guess][i].set(key)
-                break
-            
+        for i, guessed_key in enumerate(self._guessed_words[self._guess]):            
             if(key == "backspace"):
                 # Delete the last character that was guessed in the row
                 self._guessed_words[self._guess][self.firstly_empty_column - 1].set('')
@@ -122,6 +116,12 @@ class Game(Window):
                     pass
                 else:
                     self._guess += 1 # Go to the next row
+                break
+
+            # Add the pressed key at an empty column (if possible)
+            if(not guessed_key.get()):
+                # Change the character inside the row to the key the user has guessed
+                self._guessed_words[self._guess][i].set(key)
                 break
     
     @property
