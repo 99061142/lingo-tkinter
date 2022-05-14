@@ -3,6 +3,8 @@ from tkinter import ttk
 from random_word import RandomWords
 from tkinter import messagebox
 
+import enchant
+
 class Window(tk.Tk):
     _bg = "#121212"
 
@@ -93,32 +95,50 @@ class Game(Window):
     def key_pressed(self, key:str):
         # For every character inside the row
         for i, guessed_key in enumerate(self._guessed_words[self._guess]):
+            # Add the pressed key at an empty column (if possible)
+            if(not guessed_key.get()):
+                # Change the character inside the row to the key the user has guessed
+                self._guessed_words[self._guess][i].set(key)
+                break
+            
             if(key == "backspace"):
                 # Delete the last character that was guessed in the row
                 self._guessed_words[self._guess][self.firstly_empty_column - 1].set('')
                 break
             
             elif(key == "enter"):
-                # If the user guessed every column
-                if(self.firstly_empty_column == self.word_length):
-                    self.check_guessed_word()
-                    self._guess += 1 # Go to the next row
-                else:
-                    self.error_message("Not enough letters") # Show the error message
-                break
-
-            # If the column is not already guessed (length of the word was not reached)
-            if(not guessed_key.get()):
-                # Change the character inside the row to the key the user has guessed
-                self._guessed_words[self._guess][i].set(key)
-                break
+                # Show an error message if the user guessed every column
+                if(self.firstly_empty_column != self.word_length):
+                    self.error_message("Not enough letters")
+                    break
     
-    def check_guessed_word(self):
-        guessed_word = [x.get() for x in self._guessed_words[self._guess]] # Word the user has guessed
-
+                # Show an error message if the word is not real
+                if(not self.real_word):
+                    self.error_message("Not in word list")
+                    break
+            
+                # Show the end screen if the user guessed the word
+                if(self.word_guessed):
+                    pass
+                else:
+                    self._guess += 1 # Go to the next row
+                break
     
     @property
-    def firstly_empty_column(self):
+    def guessed_word(self) -> str:
+        guessed_word = [x.get() for x in self._guessed_words[self._guess]] # Word the user has guessed
+        return ''.join(guessed_word)
+    
+    @property
+    def real_word(self) -> bool:
+        return enchant.Dict("en_US").check(self.guessed_word)
+
+    @property
+    def word_guessed(self) -> bool:
+        return self.guessed_word == self._word
+
+    @property
+    def firstly_empty_column(self) -> int:
         # For every character inside the row
         for i, guessed_key in enumerate(self._guessed_words[self._guess]):
             # Return the index that's empty
@@ -128,7 +148,7 @@ class Game(Window):
         return self.word_length
 
     @property
-    def word_length(self):
+    def word_length(self) -> int:
         return len(self._word)
 
 
