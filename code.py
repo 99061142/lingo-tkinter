@@ -7,6 +7,7 @@ import enchant
 
 class Window(tk.Tk):
     _bg = "#121212"
+    _labels = []
 
     def __init__(self):
         super().__init__() # "self" gets changed to the tkinter module
@@ -31,6 +32,7 @@ class Window(tk.Tk):
             board_row.grid()
 
             guessed_row_word = []
+            row_labels = []
 
             # For every character inside the word
             for col in range(self.word_length):
@@ -38,8 +40,12 @@ class Window(tk.Tk):
                 character_guess = tk.StringVar()
                 guessed_row_word.append(character_guess)
 
-                ttk.Label(board_row, textvariable=character_guess, font=("Helvetica 15"), anchor='center').grid(row=row, column=col, ipadx=15, ipady=10, padx=3) # Label that shows the key the user guessed
-
+                # Label that shows the key the user guessed
+                label = ttk.Label(board_row, textvariable=character_guess, font=("Helvetica 15"), anchor='center')
+                label.grid(row=row, column=col, ipadx=15, ipady=10, padx=3)
+                row_labels.append(label)
+            
+            self._labels.append(row_labels)
             self._guessed_words.append(guessed_row_word)
 
     def keyboard(self):
@@ -84,7 +90,7 @@ class Window(tk.Tk):
 
 
 class Game(Window):
-    _word = RandomWords().get_random_word(hasDictionaryDef="true", minLength=6, maxLength=6)
+    _word = RandomWords().get_random_word(hasDictionaryDef="true", includePartOfSpeech="noun,verb", minCorpusCount=1, maxCorpusCount=10, minDictionaryCount=1, maxDictionaryCount=10, minLength=6, maxLength=6).lower()
     _chances = 6
     _guessed_words = []
     _guess = 0
@@ -107,12 +113,14 @@ class Game(Window):
                     break
     
                 # Show an error message if the word is not real
-                if(not self.real_word):
+                if(not self.real_word and not self.guessed_correctly):
                     self.error_message("Not in word list")
                     break
             
+                self.show_corrections()
+
                 # Show the end screen if the user guessed the word
-                if(self.word_guessed):
+                if(self.guessed_correctly):
                     pass
                 else:
                     self._guess += 1 # Go to the next row
@@ -124,6 +132,21 @@ class Game(Window):
                 self._guessed_words[self._guess][i].set(key)
                 break
     
+    def show_corrections(self):
+        guessed_word = list(self.guessed_word)
+
+        # Loop through the guessed / correct word
+        for i, (guessed_character, character) in enumerate(zip(self.guessed_word, self._word)):
+            # Change the label color to GREEN if the character is on the correct position
+            if(guessed_character == character):
+                guessed_word.remove(guessed_character)
+                self._labels[self._guess][i].config(background="green")
+
+            # Change the label color to YELLOW if the character is in the word, but not on the correct position
+            elif(guessed_character in self._word):
+                guessed_word.remove(guessed_character)
+                self._labels[self._guess][i].config(background="yellow")
+
     @property
     def guessed_word(self) -> str:
         guessed_word = [x.get() for x in self._guessed_words[self._guess]] # Word the user has guessed
@@ -134,7 +157,7 @@ class Game(Window):
         return enchant.Dict("en_US").check(self.guessed_word)
 
     @property
-    def word_guessed(self) -> bool:
+    def guessed_correctly(self) -> bool:
         return self.guessed_word == self._word
 
     @property
