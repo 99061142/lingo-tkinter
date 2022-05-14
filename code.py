@@ -138,8 +138,6 @@ class Game(Window):
     def show_corrections(self):
         guessed_word = list(self.guessed_word)
 
-        print(self._word)
-
         # Loop through the guessed / correct word
         for i, (guessed_character, character) in enumerate(zip(self.guessed_word, self._word)):
             # Change the label color to GREEN if the character is on the correct position
@@ -153,13 +151,18 @@ class Game(Window):
                 guessed_word.remove(guessed_character)
                 self._labels[self._guess][i].config(background='#ACB22D') # Update row column styling
                 self.change_key_styling(guessed_character, '#ACB22D') # Update keyboard key styling
+            
+            self.change_key_styling(guessed_character) # Update keyboard key styling
 
-    def change_key_styling(self, character:str, bg:str):
+    def change_key_styling(self, character:str, bg=None):
         # For every key on the keyboard
         for key in self._keys:
             # Change the background of the key when the guessed character is in the word
             if key['text'].lower() == character:
-                key.config(bg=bg)
+                if bg:
+                    key.config(bg=bg)
+                else:
+                    key.config(bg='#3D3D3D', command='')
                 break
 
     @property
