@@ -8,6 +8,7 @@ import enchant
 class Window(tk.Tk):
     _bg = "#121212"
     _labels = []
+    _keys = []
 
     def __init__(self):
         super().__init__() # "self" gets changed to the tkinter module
@@ -78,8 +79,10 @@ class Window(tk.Tk):
                     bg='#888888',
                     fg='#F0F0F0',
                     command= lambda key=key: self.key_pressed(key)
-                ).grid(row=row, column=col, padx=3)
-
+                )
+                button.grid(row=row, column=col, padx=3)
+                self._keys.append(button)
+            
     def error_message(self, message:str):
         messagebox.showerror("", message) # Show the error message
 
@@ -135,21 +138,33 @@ class Game(Window):
     def show_corrections(self):
         guessed_word = list(self.guessed_word)
 
+        print(self._word)
+
         # Loop through the guessed / correct word
         for i, (guessed_character, character) in enumerate(zip(self.guessed_word, self._word)):
             # Change the label color to GREEN if the character is on the correct position
             if(guessed_character == character):
                 guessed_word.remove(guessed_character)
-                self._labels[self._guess][i].config(background="green")
+                self._labels[self._guess][i].config(background='#268321') # Update row column styling
+                self.change_key_styling(guessed_character, '#268321') # Update keyboard key styling
 
             # Change the label color to YELLOW if the character is in the word, but not on the correct position
             elif(guessed_character in self._word):
                 guessed_word.remove(guessed_character)
-                self._labels[self._guess][i].config(background="yellow")
+                self._labels[self._guess][i].config(background='#ACB22D') # Update row column styling
+                self.change_key_styling(guessed_character, '#ACB22D') # Update keyboard key styling
+
+    def change_key_styling(self, character:str, bg:str):
+        # For every key on the keyboard
+        for key in self._keys:
+            # Change the background of the key when the guessed character is in the word
+            if key['text'].lower() == character:
+                key.config(bg=bg)
+                break
 
     @property
     def guessed_word(self) -> str:
-        guessed_word = [x.get() for x in self._guessed_words[self._guess]] # Word the user has guessed
+        guessed_word = [character.get() for character in self._guessed_words[self._guess]] # Word the user has guessed
         return ''.join(guessed_word)
     
     @property
