@@ -151,8 +151,8 @@ class Game(Window):
                 guessed_word.remove(guessed_character)
                 self._labels[self._guess][i].config(background='#ACB22D') # Update row column styling
                 self.change_key_styling(guessed_character, '#ACB22D') # Update keyboard key styling
-            
-            self.change_key_styling(guessed_character) # Update keyboard key styling
+            else:
+                self.change_key_styling(guessed_character) # Update keyboard key styling
 
     def change_key_styling(self, character:str, bg=None):
         # For every key on the keyboard
