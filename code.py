@@ -8,7 +8,12 @@ import enchant
 class Window(tk.Tk):
     _bg = "#121212"
     _labels = []
-    _keys = []
+    _keyboard_buttons = []
+    _keyboard_keys = [
+        ['q', 'w', 'e', 'r', 't', 'y', 'u' ,'i' ,'o' ,'p'],
+        ['a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l'],
+        ['Enter', 'z', 'x', 'c', 'v', 'b', 'n', 'm', 'BackSpace']
+    ]
 
     def __init__(self):
         super().__init__() # "self" gets changed to the tkinter module
@@ -19,6 +24,7 @@ class Window(tk.Tk):
         self.configure(background=self._bg)
         self.geometry("1000x500")
         self.board()
+        self.keyboard_bindings()
         self.keyboard() # Add the keyboard
     
     def board(self):
@@ -47,23 +53,17 @@ class Window(tk.Tk):
                 row_labels.append(label)
             
             self._labels.append(row_labels)
-            self._guessed_words.append(guessed_row_word)
+            self._board.append(guessed_row_word)
 
     def keyboard(self):
         # Frame for the keyboard
         keyboard_frame = tk.Frame(self.game_window_frame, bg=self._bg)
         keyboard_frame.pack()
-    
-        # Keys on the keyboard
-        keys = [
-            ['q', 'w', 'e', 'r', 't', 'y', 'u' ,'i' ,'o' ,'p'],
-            ['a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l'],
-            ['enter', 'z', 'x', 'c', 'v', 'b', 'n', 'm', 'backspace']
-        ]
+
         big_keys = ['enter', 'backspace'] # Keys that are bigger on the keyboard
 
         # For every row on the keyboard
-        for row, row_keys in enumerate(keys):
+        for row, row_keys in enumerate(self._keyboard_keys):
             # Frame for the row on the keyboard
             row_frame = tk.Frame(keyboard_frame, bg=self._bg, pady=3)
             row_frame.grid()
@@ -78,11 +78,26 @@ class Window(tk.Tk):
                     width=width,
                     bg='#888888',
                     fg='#F0F0F0',
-                    command= lambda key=key: self.key_pressed(key)
+                    command= lambda key=key: self.key_pressed(key.lower())
                 )
                 button.grid(row=row, column=col, padx=3)
-                self._keys.append(button)
-            
+                self._keyboard_buttons.append(button)
+
+    def keyboard_bindings(self):
+        # Add the binding for every key on the GUI keyboard
+        for key_row in self._keyboard_keys:
+            for key in key_row:
+                if(key.lower() == "enter"): 
+                    self.bind('<Return>', lambda event: self.key_pressed('enter')) # Add enter binding
+                else:
+                    # Add binding for every key on the keyboard
+                    binding_name = '<%s>' %key if len(key) > 1 else key
+                    self.bind(binding_name, lambda key=key: self.key_pressed(key.keysym.lower()))
+
+                    # Add the uppercase binding for a character
+                    if len(key) == 1:
+                        self.bind(binding_name.upper(), lambda key=key: self.key_pressed(key.keysym.lower()))
+
     def error_message(self, message:str):
         messagebox.showerror("", message) # Show the error message
 
@@ -95,7 +110,7 @@ class Window(tk.Tk):
 class Game(Window):
     _word = RandomWords().get_random_word(hasDictionaryDef="true", includePartOfSpeech="noun,verb", minCorpusCount=1, maxCorpusCount=10, minDictionaryCount=1, maxDictionaryCount=10, minLength=6, maxLength=6).lower()
     _chances = 6
-    _guessed_words = []
+    _board = []
     _guess = 0
 
     def start(self):
@@ -103,10 +118,10 @@ class Game(Window):
 
     def key_pressed(self, key:str):
         # For every character inside the row
-        for i, guessed_key in enumerate(self._guessed_words[self._guess]):            
+        for i, guessed_key in enumerate(self._board[self._guess]):            
             if(key == "backspace"):
                 # Delete the last character that was guessed in the row
-                self._guessed_words[self._guess][self.firstly_empty_column - 1].set('')
+                self._board[self._guess][self.firstly_empty_column - 1].set('')
                 break
             
             elif(key == "enter"):
@@ -137,7 +152,7 @@ class Game(Window):
             # Add the pressed key at an empty column (if possible)
             if(not guessed_key.get()):
                 # Change the character inside the row to the key the user has guessed
-                self._guessed_words[self._guess][i].set(key)
+                self._board[self._guess][i].set(key)
                 break
     
     def show_corrections(self):
@@ -161,18 +176,22 @@ class Game(Window):
 
     def change_key_styling(self, character:str, bg:str=None):
         # For every key on the keyboard
-        for key in self._keys:
+        for key in self._keyboard_buttons:
+            key_name = key['text'].lower()
             # Change the background of the key when the guessed character is in the word
-            if key['text'].lower() == character:
+            if key_name == character:
                 if bg:
                     key.config(bg=bg)
                 else:
+                    # Disable the key when it's not in the word
                     key.config(bg='#3D3D3D', command='')
+                    self.unbind(key_name)
+                    self.unbind(key_name.upper())
                 break
 
     @property
     def guessed_word(self) -> str:
-        guessed_word = [character.get() for character in self._guessed_words[self._guess]] # Word the user has guessed
+        guessed_word = [character.get() for character in self._board[self._guess]] # Word the user has guessed
         return ''.join(guessed_word)
     
     @property
@@ -186,7 +205,7 @@ class Game(Window):
     @property
     def firstly_empty_column(self) -> int:
         # For every character inside the row
-        for i, guessed_key in enumerate(self._guessed_words[self._guess]):
+        for i, guessed_key in enumerate(self._board[self._guess]):
             # Return the index that's empty
             if(not guessed_key.get()):
                 return i
