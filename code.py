@@ -14,6 +14,7 @@ class Window(tk.Tk):
         ['a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l'],
         ['Enter', 'z', 'x', 'c', 'v', 'b', 'n', 'm', 'BackSpace']
     ]
+    _bindings_name = []
 
     def __init__(self):
         super().__init__() # "self" gets changed to the tkinter module
@@ -23,11 +24,10 @@ class Window(tk.Tk):
         self.board_frame = tk.Frame(self.game_window_frame, bg=self._bg, pady=25)
         self.title("Lingo")
         self.configure(background=self._bg)
-        self.geometry("1000x500")
+        self.geometry("1250x650")
         self.board()
-        self.keyboard_bindings()
-        self.keyboard() # Add the keyboard
-    
+        self.enable_keyboard() # Add the keyboard
+
     def board(self):    
         self.board_frame.pack()    
 
@@ -88,14 +88,40 @@ class Window(tk.Tk):
             for key in key_row:
                 if(key.lower() == "enter"): 
                     self.bind('<Return>', lambda event: self.key_pressed('enter')) # Add enter binding
+                    self._bindings_name.append('<Return>') # Add binding name to list
                 else:
                     # Add binding for every key on the keyboard
                     binding_name = '<%s>' %key if len(key) > 1 else key
                     self.bind(binding_name, lambda key=key: self.key_pressed(key.keysym.lower()))
+                    self._bindings_name.append(binding_name) # Add binding name to list
 
-                    # Add the uppercase binding for a character
+                    # Add the uppercase binding for the key
                     if len(key) == 1:
                         self.bind(binding_name.upper(), lambda key=key: self.key_pressed(key.keysym.lower()))
+    
+    def disable_keyboard(self):
+        # Disable every key on the GUI keyboard
+        for key in self._keyboard_buttons:              
+            key['command'] = ''
+
+        # Unbind every key on the GUI keyboard
+        for binding_name in self._bindings_name:
+            self.unbind(binding_name)
+
+            # Unbind the uppercase key
+            if(len(binding_name) == 1):
+                self.unbind(binding_name.upper())
+
+    def enable_keyboard(self):
+        # Create the keyboard
+        if not self._keyboard_buttons:
+            self.keyboard()
+        else:
+            # Change every key styling on the GUI keyboard to the starting phase
+            for key in self._keyboard_buttons:
+                key.config(bg='#888888')    
+
+        self.keyboard_bindings() # Add every binding for the keys that are on the GUI keyboard 
 
     def error_message(self, message:str):
         # Show the error message, and delete it after 2 seconds
@@ -103,6 +129,25 @@ class Window(tk.Tk):
         label.grid(row=0)
         self.after(2000, label.destroy)
 
+    def end_screen(self, won:bool):
+        self.disable_keyboard()
+
+
+        end_frame = tk.Frame(self.board_frame, bg='white', padx=25, pady=25)
+        end_frame.grid(row=0)
+
+        message = "You guessed the word correctly" if won else "The word was %s" %self._word
+
+        # Label that shows if the user won, or the word if the user lost        
+        tk.Label(end_frame, text=message, font=("Helvetica 15"), anchor='center', bg='white', pady=25).grid()
+
+        # Button to play again
+        button = tk.Button(
+            end_frame, 
+            text='Play Again',
+            font=("Helvetica 15 bold"),
+        ).grid(sticky='NESW')
+    
     def start(self):
         # Show the game
         self.game_window_frame.pack()    
@@ -141,13 +186,13 @@ class Game(Window):
 
                 # Show the end screen if the user guessed the word
                 if(self.guessed_correctly):
-                    print("WON")
+                    self.end_screen(True)
                 else:
                     self._guess += 1 # Go to the next row
 
                     # When all the guesses are taken
                     if self._guess == self._chances:
-                        print("GAME OVER")
+                        self.end_screen(False)
 
                 break
 
