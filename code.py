@@ -124,9 +124,14 @@ class Game(Window):
 
                 # Show the end screen if the user guessed the word
                 if(self.guessed_correctly):
-                    pass
+                    print("WON")
                 else:
                     self._guess += 1 # Go to the next row
+
+                    # When all the guesses are taken
+                    if self._guess == self._chances:
+                        print("GAME OVER")
+
                 break
 
             # Add the pressed key at an empty column (if possible)
@@ -154,7 +159,7 @@ class Game(Window):
             else:
                 self.change_key_styling(guessed_character) # Update keyboard key styling
 
-    def change_key_styling(self, character:str, bg=None):
+    def change_key_styling(self, character:str, bg:str=None):
         # For every key on the keyboard
         for key in self._keys:
             # Change the background of the key when the guessed character is in the word
