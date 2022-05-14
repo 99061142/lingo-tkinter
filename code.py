@@ -20,6 +20,7 @@ class Window(tk.Tk):
 
         # window for the game
         self.game_window_frame = tk.Frame(self, bg=self._bg)
+        self.board_frame = tk.Frame(self.game_window_frame, bg=self._bg, pady=25)
         self.title("Lingo")
         self.configure(background=self._bg)
         self.geometry("1000x500")
@@ -27,15 +28,13 @@ class Window(tk.Tk):
         self.keyboard_bindings()
         self.keyboard() # Add the keyboard
     
-    def board(self):
-        # Frame for the board 
-        board_frame = tk.Frame(self.game_window_frame, bg=self._bg, pady=25)
-        board_frame.pack()
-        
+    def board(self):    
+        self.board_frame.pack()    
+
         # For every chance the user has to guess the word
         for row in range(self._chances):
             # Frame for the word row
-            board_row = tk.Frame(board_frame, bg=self._bg, pady=3)
+            board_row = tk.Frame(self.board_frame, bg=self._bg, pady=3)
             board_row.grid()
 
             guessed_row_word = []
@@ -48,7 +47,7 @@ class Window(tk.Tk):
                 guessed_row_word.append(character_guess)
 
                 # Label that shows the key the user guessed
-                label = ttk.Label(board_row, textvariable=character_guess, font=("Helvetica 15"), anchor='center')
+                label = ttk.Label(board_row, textvariable=character_guess, font=("Helvetica 15"), background='#565758', foreground='white', anchor='center')
                 label.grid(row=row, column=col, ipadx=15, ipady=10, padx=3)
                 row_labels.append(label)
             
@@ -70,7 +69,7 @@ class Window(tk.Tk):
 
             # Add the button for each key
             for col, key in enumerate(row_keys):
-                width = 15 if key in big_keys else 10
+                width = 15 if key.lower() in big_keys else 10
 
                 button = tk.Button(
                     row_frame, 
@@ -99,7 +98,10 @@ class Window(tk.Tk):
                         self.bind(binding_name.upper(), lambda key=key: self.key_pressed(key.keysym.lower()))
 
     def error_message(self, message:str):
-        messagebox.showerror("", message) # Show the error message
+        # Show the error message, and delete it after 2 seconds
+        label = tk.Label(self.board_frame, text=message, font=("Helvetica 15"), bg='white')
+        label.grid(row=0)
+        self.after(2000, label.destroy)
 
     def start(self):
         # Show the game
@@ -183,10 +185,7 @@ class Game(Window):
                 if bg:
                     key.config(bg=bg)
                 else:
-                    # Disable the key when it's not in the word
-                    key.config(bg='#3D3D3D', command='')
-                    self.unbind(key_name)
-                    self.unbind(key_name.upper())
+                    key.config(bg='#3D3D3D') # Disable the key when it's not in the word
                 break
 
     @property
