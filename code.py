@@ -1,8 +1,7 @@
 import tkinter as tk
 from tkinter import ttk
-from random_word import RandomWords
 from tkinter import messagebox
-import enchant
+from random import choice
 
 class Window(tk.Tk):
     #Labels
@@ -338,17 +337,8 @@ class Game(Window):
 
     @property 
     def random_word(self):
-        # Get an random word
-        return RandomWords().get_random_word(
-            hasDictionaryDef="true", 
-            includePartOfSpeech="noun,verb", 
-            minCorpusCount=1, 
-            maxCorpusCount=10, 
-            minDictionaryCount=1, 
-            maxDictionaryCount=10, 
-            minLength=6, 
-            maxLength=6
-        ).lower()
+        return choice(self.possible_words) # Get an random word
+
 
     @property
     def open_columns(self) -> bool:
@@ -363,8 +353,12 @@ class Game(Window):
         return row_word
 
     @property
+    def possible_words(self) -> list:
+        return open('words.txt','r').read().splitlines()
+
+    @property
     def real_word(self) -> bool:
-        return enchant.Dict("en_US").check(self.current_row_word) # Check if the word is a real word
+        return self.current_row_word in self.possible_words # If word is in the word list
 
     @property
     def word_guessed(self) -> bool:
