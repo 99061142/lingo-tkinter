@@ -31,7 +31,7 @@ class Window(tk.Tk):
 
     def __init__(self):
         super().__init__() # "self" gets changed to the tkinter module
-        self.word = self.random_word # Get a random word to begin the game
+        self._word = self.random_word # Get a random word to begin the game
 
         # Game window
         self.title("Lingo")
@@ -324,16 +324,8 @@ class Game(Window):
         return len(self.labels[self.round])
 
     @property
-    def word(self):
-        return self._word
-
-    @word.setter
-    def word(self, word:str):
-        self._word = word
-    
-    @property
     def word_length(self) -> int:
-        return len(self.word)
+        return len(self._word)
 
     @property 
     def random_word(self):
@@ -362,7 +354,7 @@ class Game(Window):
 
     @property
     def word_guessed(self) -> bool:
-        return self.current_row_word == self.word # If the user guessed the word correctly
+        return self.current_row_word == self._word # If the user guessed the word correctly
 
     def next_round(self):
         # When the game is over
@@ -406,23 +398,23 @@ class Game(Window):
         guessed_word = list(self.current_row_word) # Word the user has guessed
 
         # Loop through the guessed / correct word
-        for i, (guessed_character, character) in enumerate(zip(self.current_row_word, self.word)):
+        for i, (guessed_character, character) in enumerate(zip(self.current_row_word, self._word)):
             # Correct position
             if(guessed_character == character):
                 background_color = self._green
 
             # Not correct position but in word
-            elif(guessed_character in self.word):
+            elif(guessed_character in self._word):
                 background_color = self._yellow
             
             # Correct position / not correct position but in word
-            if(guessed_character == character or guessed_character in self.word):
+            if(guessed_character == character or guessed_character in self._word):
                 guessed_word.remove(guessed_character)
                 self.labels[self.round][i].config(background=background_color) # Column styling
                 self.change_key_styling(guessed_character, background_color) # Keyboard key styling
             
             # Not in word
-            if guessed_character not in self.word:
+            if guessed_character not in self._word:
                 self.change_key_styling(guessed_character) # Keyboard key styling
 
     def change_key_styling(self, character:str, bg:str=None):        
