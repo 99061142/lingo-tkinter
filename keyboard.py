@@ -2,17 +2,10 @@ import re
 import tkinter as tk
 
 class Keyboard():
-    # TESTING CODE FOR THE COLORS
-    _yellow = "#ACB22D"
-    _green = "#268321"
-    _white = "#F0F0F0"
-    _light_gray = "#888888"
-    _window_color = "#121212"
-    _disable_color = "#3D3D3D"
-
     def __init__(self, window):
-        # GUI keyboard characters inside the button / bindings for own keyboard
         self.window = window
+
+        # GUI keyboard characters inside the button / bindings for own keyboard
         self.keys = [      
             {'q': 'q', 'w': 'w', 'e': 'e', 'r': 'r', 't': 't', 'y': 'y', 'u': 'u' , 'i': 'i', 'o': 'o' , 'p': 'p'},
             {'a': 'a', 's': 's', 'd': 'd', 'f': 'f', 'g': 'g', 'h': 'h', 'j': 'j', 'k': 'k', 'l': 'l'},
@@ -22,8 +15,8 @@ class Keyboard():
         self.binding_names = [row.get(char) for row in self.keys for char in row] # bindings for own keyboard
         self.keyboard_buttons = {} # GUI keyboard buttons
         
-        self.enable_keys()
         self.keyboard()
+        self.enable_keys()
 
     def disable_keys(self):
         for bind in self.binding_names:
@@ -60,7 +53,7 @@ class Keyboard():
         # Frame for the keyboard
         keyboard_frame = tk.Frame(
             self.window,
-            bg=self._window_color, 
+            bg=self.window._window_color,
         )
 
         # For every keyboard row
@@ -69,7 +62,7 @@ class Keyboard():
             row_frame = tk.Frame(
                 keyboard_frame, 
                 pady=3,
-                bg=self._window_color,
+                bg=self.window._window_color,
             )
             row_frame.grid()
 
@@ -98,12 +91,12 @@ class Keyboard():
 
     def char_incorrect(self, char:str):
         self.get_button(char).config(
-            background=self._disable_color,
+            background=self.window._button_incorrect,
         )
         
     def char_incorrect_position(self, char:str):
         self.get_button(char).config(
-            background=self._yellow,
+            background=self.window._button_incorrect_position,
         )
 
     def standard_button_styling(self, button, char):
@@ -112,6 +105,6 @@ class Keyboard():
 
         button.config(
             width=width,
-            bg=self._light_gray,
-            fg=self._white,
+            bg=self.window._light_gray,
+            fg=self.window._white,
         )
