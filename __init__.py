@@ -436,10 +436,8 @@ if __name__ == "__main__":
 """
 
 import tkinter as tk
-from random import choice
 from board import *
 from keyboard import *
-import word
 
 # IMPORT KEYBOARD FILE 
 class Window(tk.Tk):
@@ -452,15 +450,18 @@ class Window(tk.Tk):
 
     def __init__(self):
         super().__init__()
-        self._word = word.random_word()
-        self.word_length = len(self._word)
-        
+        self.window_config()
+
         Board(self)
         Keyboard(self)
-        
+
     def start(self):
         self.mainloop()
 
+    def window_config(self):
+        self.config(
+            background=self._window_color
+        )
 
 if __name__ == "__main__":
     window = Window()
