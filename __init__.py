@@ -441,6 +441,13 @@ from keyboard import *
 
 # IMPORT KEYBOARD FILE 
 class Window(tk.Tk):
+    _window_color = "#121212"
+    _green = "#268321"
+    _white = "#F0F0F0"
+    _light_gray = "#888888"
+    _button_incorrect_position = "#ACB22D"
+    _button_incorrect = "#3D3D3D"
+
     def __init__(self):
         super().__init__()
         Board(self)
