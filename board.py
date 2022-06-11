@@ -66,6 +66,7 @@ class Board():
         # If all the columns are guessed and the word is real
         if('' not in self.get_row_word() and word.real_word(self.get_row_word())):
             self._current_round += 1 # Go to the next round
+            return True
         return False
 
     def backspace_pressed(self):
