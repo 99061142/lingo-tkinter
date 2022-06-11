@@ -9,6 +9,7 @@ class Board():
         self._current_round = 1
         self._word = word.random_word()
         self.stringvars = [[tk.StringVar() for i in range(self.get_word_length())] for i in range(self._max_rounds)] # Characters in the board
+        self.all_word_guesses = {}
         self.board() # Create the board
 
     def board(self):
@@ -65,6 +66,10 @@ class Board():
     def enter_pressed(self) -> bool:
         # If all the columns are guessed and the word is real
         if('' not in self.get_row_word() and word.real_word(self.get_row_word())):
+            # Add the word to the list of guessed words
+            round_name = f"Round_{self._current_round}"
+            self.all_word_guesses[round_name] = ''.join(self.get_row_word())
+            
             self._current_round += 1 # Go to the next round
             return True
         return False
@@ -73,3 +78,18 @@ class Board():
         # Delete the last character in the current row
         index = self.get_word_length() if('' not in self.get_row_word()) else self.get_row_word().index('')        
         self.stringvars[self._current_round - 1][index - 1].set('')
+
+
+    def create_end_info(self):  
+        guessed_correctly = list(self.all_word_guesses)[-1] == self._word
+        tries = self._current_round if (guessed_correctly) else self._current_round - 1
+
+        # Game info to store
+        game = {   
+            "game_id": self.window.get_player_games() + 1, 
+            "correct_word": self._word,
+            "all_word_guesses": self.all_word_guesses,
+            "guessed_correctly": guessed_correctly,
+            "tries": tries,
+        }
+        self.window.add_player_game(game) # Add the game info
