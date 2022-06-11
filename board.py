@@ -1,6 +1,9 @@
 import tkinter as tk
 from tkinter import ttk
 import word
+from time import time
+
+
 
 class Board():
     def __init__(self, window):
@@ -14,7 +17,7 @@ class Board():
 
     def board(self):
         # Whole board frame
-        self.board_frame = tk.Frame(
+        self._board_frame = tk.Frame(
             self.window, 
             bg=self.window._window_color, 
             pady=25,
@@ -24,7 +27,7 @@ class Board():
         for row in range(self._max_rounds):
             # Frame for the word row
             board_row = tk.Frame(
-                self.board_frame,
+                self._board_frame,
                 bg=self.window._window_color, 
                 pady=3,
             )
@@ -46,7 +49,7 @@ class Board():
                     ipady=10, 
                     padx=3,
                 )
-        self.board_frame.grid() # Place the board on the window 
+        self._board_frame.grid() # Place the board on the window 
 
     def get_word_length(self) -> int:
         return len(self._word)
@@ -72,6 +75,11 @@ class Board():
             
             self._current_round += 1 # Go to the next round
             return True
+        
+        if('' not in self.get_row_word()):
+            self.error_message("The word is not in the list of possible words")
+        else:
+            self.error_message("You must use the length of the word")
         return False
 
     def backspace_pressed(self):
@@ -93,3 +101,29 @@ class Board():
             "tries": tries,
         }
         self.window.add_player_game(game) # Add the game info
+
+    def error_message(self, message):
+        try:
+            self._error_frame.destroy() # Delete old error message if there was any
+        except AttributeError:
+            pass
+
+        # Error frame
+        error_frame = tk.Frame(
+            self._board_frame,
+            bg=self.window._light_gray,
+            pady=5,
+        )
+
+        # Text in error frame
+        tk.Label(
+            error_frame,
+            text=message,
+            font=("Helvetica 15"),
+            background=self.window._light_gray,
+            foreground=self.window._red,
+        ).grid()
+        error_frame.grid(row=0)
+
+        self._error_frame = error_frame 
+        error_frame.after(2000, lambda: error_frame.grid_forget())
