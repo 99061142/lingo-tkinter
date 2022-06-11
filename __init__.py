@@ -7,6 +7,7 @@ class App(tk.Tk):
     _window_color = "#121212"
     _green = "#268321"
     _white = "#F0F0F0"
+    _red = "#FF0000"
     _light_gray = "#888888"
     _button_incorrect_position = "#ACB22D"
     _button_incorrect = "#3D3D3D"
