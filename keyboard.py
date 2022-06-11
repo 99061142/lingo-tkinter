@@ -54,8 +54,12 @@ class Keyboard():
         char = char.lower()
         
         if char == "enter":
+            self.board.enter_pressed()
+
             if(self.board._current_round == self.board._max_rounds + 1 or self.board.word_guessed()):
                 self.disable_keys()
+                self.board.create_end_info()
+
         elif char == "backspace":
             self.board.backspace_pressed()
         else:
