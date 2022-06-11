@@ -1,8 +1,8 @@
 import tkinter as tk
 from board import Board
 from keyboard import Keyboard
+import json
 
-# IMPORT KEYBOARD FILE 
 class App(tk.Tk):
     _window_color = "#121212"
     _green = "#268321"
@@ -19,6 +19,25 @@ class App(tk.Tk):
         self.config(
             background=self._window_color,
         )
+
+        self.get_player_games()
+    
+    def get_player_games(self) -> int:
+        with open('scores.json', "r") as file:
+            data = json.load(file)
+        file.close()
+
+        return len(data)
+
+    def add_player_game(self, game:dict):
+        with open('scores.json', "r") as file:
+            data = json.load(file)
+        file.close()
+
+        data.append(game)
+
+        with open('scores.json', "w") as file:
+            json.dump(data, file)
 
     def start(self):
         board = Board(self)
