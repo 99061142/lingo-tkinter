@@ -2,8 +2,9 @@ import re
 import tkinter as tk
 
 class Keyboard():
-    def __init__(self, window):
+    def __init__(self, window, board):
         self.window = window
+        self.board = board
 
         # GUI keyboard characters inside the button / bindings for own keyboard
         self.keys = [      
@@ -14,14 +15,19 @@ class Keyboard():
         self.chars = [char for row in self.keys for char in row] # GUI keyboard characters
         self.binding_names = [row.get(char) for row in self.keys for char in row] # bindings for own keyboard
         self.keyboard_buttons = {} # GUI keyboard buttons
-        
+
+        # Create the keyboard
         self.keyboard()
         self.enable_keys()
 
     def disable_keys(self):
-        for bind in self.binding_names:
-            self.window.unbind(bind)
-            self.keyboard_buttons[bind].config(state='disabled')
+        for binding_name in self.binding_names:
+            self.keyboard_buttons[binding_name].config(state='disabled')
+            self.window.unbind(binding_name)
+
+            # If the character is a single letter, bind the uppercase too
+            if(len(binding_name) == 1):
+                self.window.unbind(binding_name.upper())
 
     def enable_keys(self):
         for binding_name in self.binding_names:
@@ -35,19 +41,25 @@ class Keyboard():
             if(len(binding_name) == 1):
                 self.window.bind(binding_name.upper(), lambda char=binding_name.upper(): self.key_pressed(char))
 
-    def binding_to_char(self, bind):
+    def binding_to_char(self, bind) -> str:
         # Get all the binding characters and get the binding character of the bind
         binding_names = list(map(lambda binding_name: re.sub("[<>]", "", binding_name.lower()), self.binding_names))
         binding_name = bind.keysym.lower()
-        
+
         return self.chars[binding_names.index(binding_name)] # Return the keyboard character of the bind
 
     def key_pressed(self, binding):
         # Character of the key that was pressed
         char = binding if isinstance(binding, str) else self.binding_to_char(binding) 
         char = char.lower()
-
-        print(char) # TEST
+        
+        if char == "enter":
+            if(self.board._current_round == self.board._max_rounds + 1 or self.board.word_guessed()):
+                self.disable_keys()
+        elif char == "backspace":
+            self.board.backspace_pressed()
+        else:
+            self.board.key_pressed(char)
 
     def keyboard(self):
         # Frame for the keyboard
@@ -99,7 +111,7 @@ class Keyboard():
             background=self.window._button_incorrect_position,
         )
 
-    def standard_button_styling(self, button, char):
+    def standard_button_styling(self, button, char:str):
         big_keys = ['enter', 'backspace'] # Keys that are bigger on the keyboard
         width = 15 if char.lower() in big_keys else 10
 
