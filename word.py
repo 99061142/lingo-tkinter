@@ -7,4 +7,4 @@ def random_word() -> str:
     return choice(possible_words())
 
 def real_word(word) -> bool:
-    return word in possible_words()
+    return ''.join(word) in possible_words()
