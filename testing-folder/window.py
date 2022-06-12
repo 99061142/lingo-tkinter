@@ -13,7 +13,18 @@ class Window(tk.Tk, metaclass=Type):
     
     def __init__(self):
         super().__init__()
+        # GUI keyboard characters / binding events for own keyboard
+        self.keys = [      
+            {'q': 'q', 'w': 'w', 'e': 'e', 'r': 'r', 't': 't', 'y': 'y', 'u': 'u' , 'i': 'i', 'o': 'o' , 'p': 'p'},
+            {'a': 'a', 's': 's', 'd': 'd', 'f': 'f', 'g': 'g', 'h': 'h', 'j': 'j', 'k': 'k', 'l': 'l'},
+            {'Enter': '<Return>', 'z': 'z', 'x': 'x', 'c': 'c', 'v': 'v', 'b': 'b', 'n': 'n', 'm': 'm', 'BackSpace': '<BackSpace>'}
+        ]
+        self.keyboard_chars = [char for row in self.keys for char in row]
+        self.binding_events = [row.get(char) for row in self.keys for char in row]
+        self.keyboard_buttons = {}
+
         self.window_config()
+        self.enable_binding_events()
 
     def window_config(self):
         self.title("Wordle clone")
@@ -22,3 +33,33 @@ class Window(tk.Tk, metaclass=Type):
         self.config(
             background=self._window_color,
         )
+
+    def enable_binding_event(self, event:str):
+        self.bind(event, lambda event=event: print(event))
+
+        # Bind the uppercase character too
+        if(len(event) == 1):
+            self.bind(event.upper(), lambda event=event: print(event))
+
+    def enable_binding_events(self):
+        for event in self.binding_events:
+            self.bind(event, lambda event=event: print(event))
+
+            # Bind the uppercase character too
+            if(len(event) == 1):
+                self.bind(event.upper(), lambda event=event: print(event))
+    
+    def disable_binding_event(self, event:str):
+        self.unbind(event)
+
+        # Unbind the uppercase character too
+        if(len(event) == 1):
+            self.unbind(event.upper())
+
+    def disable_binding_events(self):
+        for event in self.binding_events:
+            self.unbind(event)
+
+            # Unbind the uppercase character too
+            if(len(event) == 1):
+                self.unbind(event.upper())
