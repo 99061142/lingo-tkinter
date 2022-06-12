@@ -1,9 +1,8 @@
-from topHierachy import Type
 import tkinter as tk
 import word
+from data import Data
 
-
-class Window(tk.Tk, metaclass=Type):
+class Window(tk.Tk, Data):
     # All colors for the application
     _window_color = "#121212"
     _green = "#268321"
@@ -32,6 +31,7 @@ class Window(tk.Tk, metaclass=Type):
         self._word = None
         self._board_columns_chars = None
         self._board_frame = None
+        self.all_word_guesses = []
 
         # VALUES FOR THE WINDOW
         self.binding_events = [row.get(char) for row in self.keyboard_keys for char in row]
@@ -102,11 +102,11 @@ class Window(tk.Tk, metaclass=Type):
             self.show_error_message("The word is not complete")
         elif(not word.real_word(self.get_current_word())):
             self.show_error_message("The word is not in the word list")
-        elif(self.round == self.max_rounds):  
-            self.game_over()
-        elif(self.word_guessed()):
+        elif(self.round == self.max_rounds or self.word_guessed()):
+            self.all_word_guesses.append(self.get_current_word())
             self.game_over()
         else:
+            self.all_word_guesses.append(self.get_current_word())
             self.round += 1
 
     def backspace_pressed(self):
@@ -166,3 +166,20 @@ class Window(tk.Tk, metaclass=Type):
     def game_over(self):
         self.disable_binding_events()
         self.disable_keyboard()
+        self.save_game_data()
+
+    def save_game_data(self):  
+        guessed_correctly = self.all_word_guesses[-1] == self._word
+        tries = self.round if (guessed_correctly) else self.round - 1
+
+        # Add the game info
+        game = {   
+            "game_id": self.get_player_games() + 1, 
+            "correct_word": self._word,
+            "all_word_guesses": self.all_word_guesses,
+            "guessed_correctly": guessed_correctly,
+            "tries": tries,
+        }
+        self.add_player_game(game)
+
+
