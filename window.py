@@ -13,8 +13,7 @@ class Window(tk.Tk, Scores):
         self.yellow = "#ACB22D"
         self.incorrect = "#3D3D3D"
         self.column_background = "#565758"
-
-
+        
         self.keyboard_keys = [      
             {'q': 'q', 'w': 'w', 'e': 'e', 'r': 'r', 't': 't', 'y': 'y', 'u': 'u' , 'i': 'i', 'o': 'o' , 'p': 'p'},
             {'a': 'a', 's': 's', 'd': 'd', 'f': 'f', 'g': 'g', 'h': 'h', 'j': 'j', 'k': 'k', 'l': 'l'},
