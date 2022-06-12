@@ -115,14 +115,14 @@ class Board(Window):
 
         for i, (correct_char, char) in enumerate(zip(self._word, self.get_current_word())):            
             if char == correct_char:
-                self.button_config(char, self._green)
-                self.label_config(i, self._green)
+                color = self._green
             elif char in correct_word:
-                self.button_config(char, self._yellow)
-                self.label_config(i, self._yellow)
+                color = self._yellow
             else:
-                self.button_config(char, self._incorrect)
-                self.label_config(i, self._incorrect)
+                color = self._incorrect
+                
+            self.button_config(char, color)
+            self.label_config(i, color)
 
             if(char in correct_word):
                 correct_word = correct_word.replace(char, '')
