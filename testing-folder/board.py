@@ -7,11 +7,7 @@ from tkinter import ttk
 class Board(Window):
     def __init__(self):
         super().__init__()
-        self.round = 1
-        self.max_rounds = 5
-        self._word = None
         self._board_frame = None
-        self._board_columns_chars = None
         self.new_game()
 
     def set_new_word(self):
@@ -24,9 +20,6 @@ class Board(Window):
         self.set_new_word()
         self.set_board_columns_chars()
         self.board()
-
-    def get_word_length(self) -> int:
-        return len(self._word)
 
     def board(self):
         # Delete the columns inside the board if the board already exitst, else create a new board
