@@ -1,8 +1,8 @@
 import tkinter as tk
 import word
-from data import Data
+from scores import Scores
 
-class Window(tk.Tk, Data):
+class Window(tk.Tk, Scores):
     # All colors for the application
     _window_color = "#121212"
     _green = "#268321"
@@ -174,7 +174,7 @@ class Window(tk.Tk, Data):
 
         # Add the game info
         game = {   
-            "game_id": self.get_player_games() + 1, 
+            "game_id": self.get_games_played() + 1, 
             "correct_word": self._word,
             "all_word_guesses": self.all_word_guesses,
             "guessed_correctly": guessed_correctly,
