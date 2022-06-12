@@ -17,5 +17,5 @@ class Scores(metaclass=Type):
         scores.append(game)
         
         with open("scores.json", "w") as file:
-            json.dump(scores, file)
+            json.dump(scores, file, indent=4)
         file.close() 
