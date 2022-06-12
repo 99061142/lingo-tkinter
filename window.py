@@ -8,8 +8,8 @@ class Window(tk.Tk, Scores):
     _white = "#F0F0F0"
     _red = "#FF0000"
     _light_gray = "#888888"
-    _key_incorrect_position = "#ACB22D"
-    _yellow = "#3D3D3D"
+    _yellow = "#ACB22D"
+    _incorrect = "#3D3D3D"
     _column_background = "#565758"
     
     def __init__(self):
