@@ -25,7 +25,7 @@ class App(Keyboard, Board, endScreen, Error):
 
     def save_game_data(self):  
         guessed_correctly = self.word_guesses[-1] == self._word
-        tries = self.round if (guessed_correctly) else self.round - 1
+        tries = self.max_rounds if (guessed_correctly) else self.round - 1
 
         # Add the game info
         game = {   
