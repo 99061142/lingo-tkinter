@@ -1,6 +1,7 @@
 from topHierachy import Type
+import tkinter as tk
 
-class Window(metaclass=Type):
+class Window(tk.Tk, metaclass=Type):
     # All colors for the application
     _window_color = "#121212"
     _green = "#268321"
@@ -11,4 +12,13 @@ class Window(metaclass=Type):
     _key_incorrect = "#3D3D3D"
     
     def __init__(self):
-        print("WINDOW")
+        super().__init__()
+        self.window_config()
+
+    def window_config(self):
+        self.title("Wordle clone")
+        self.geometry("1000x500")
+
+        self.config(
+            background=self._window_color,
+        )

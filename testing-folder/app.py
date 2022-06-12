@@ -5,14 +5,11 @@ class App(Board, Keyboard):
     def __init__(self):
         super().__init__()
 
-
     def start(self):
-        pass
+        self.mainloop()
 
     def restart(self):
         pass
-
-
 
 
 if __name__ == "__main__":
