@@ -13,7 +13,7 @@ class Board(Window):
         self._board_frame = None
         self.word = None
         self.word_guesses = []
-        self.board_labels = [[] for i in range(self.max_rounds)]
+        self.board_labels = [{} for i in range(self.max_rounds)]
         self.new_game()
 
     def board(self):
@@ -40,7 +40,7 @@ class Board(Window):
 
     def new_game(self):
         self.word_guesses = []
-        self.board_labels = [[] for i in range(self.max_rounds)]
+        self.board_labels = [{} for i in range(self.max_rounds)]
         self.set_new_word()
         self.set_board_columns_chars()
         self.board()
@@ -70,24 +70,32 @@ class Board(Window):
             board_row.grid()
 
             for col in range(self.get_word_length()):
-                    # Create a column for every character
-                    label = ttk.Label(
-                        board_row, 
-                        textvariable=self._board_columns_chars[row][col], 
-                        font=("Helvetica 15"), 
-                        background=self._column_background, 
-                        foreground=self._white, 
-                        anchor="center",
-                    )
-                    
-                    label.grid(
-                        row=row,
-                        column=col, 
-                        ipadx=15, 
-                        ipady=10, 
-                        padx=3,
-                    )
-                    self.board_labels[row].append(label)
+                label_frame = tk.Frame(
+                    board_row, 
+                    width=50, 
+                    height=50,
+                    background=self._column_background, 
+                )
+                label_frame.pack_propagate(0) # Set fixed size
+                
+                label = ttk.Label(
+                    label_frame,
+                    textvariable=self._board_columns_chars[row][col],
+                    font=("Helvetica 15"),  
+                    background=self._column_background, 
+                    foreground=self._white
+                )
+                label.pack(expand=True)
+    
+                label_frame.grid(
+                    row=row, 
+                    column=col, 
+                    padx=5
+                )
+                self.board_labels[row][col] = {
+                    "label_frame": label_frame,
+                    "label": label,
+                }
                 
 
     def del_char_from_board(self, index:int):       
@@ -105,33 +113,22 @@ class Board(Window):
     def check_characters(self):
         correct_word = self._word
 
-        for i, (correct_char, char) in enumerate(zip(self._word, self.get_current_word())):
-            label = self.board_labels[self.round - 1][i]
-            
+        for i, (correct_char, char) in enumerate(zip(self._word, self.get_current_word())):            
             if char == correct_char:
-                self.char_correct(char)
-                self.label_correct(label)
+                self.button_config(char, self._green)
+                self.label_config(i, self._green)
             elif char in correct_word:
-                self.char_incorrect_position(char)
-                self.label_incorrect_position(label)
+                self.button_config(char, self._yellow)
+                self.label_config(i, self._yellow)
             else:
-                self.char_incorrect(char)
-                self.label_incorrect(label)
+                self.button_config(char, self._incorrect)
+                self.label_config(i, self._incorrect)
 
             if(char in correct_word):
                 correct_word = correct_word.replace(char, '')
 
-    def label_correct(self, label):
-        label.config(
-            background=self._green,
-        )
-
-    def label_incorrect(self, label):
-        label.config(
-            background=self._incorrect,
-        )
-
-    def label_incorrect_position(self, label):
-        label.config(
-            background=self._yellow,
-        )
+    def label_config(self, index:int, color:str):
+        for label_data in self.board_labels[self.round - 1][index].values():
+            label_data.config(
+                background=color,
+            )
