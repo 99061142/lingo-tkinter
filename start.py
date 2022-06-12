@@ -7,15 +7,13 @@ class App(Keyboard, Board, endScreen, Error):
     def __init__(self):
         super().__init__()
 
-    def start(self):
+    def start(self):    
         self.mainloop()
 
     def restart(self):
-        self.new_game()
+        self.new_board()
         self.enable_binding_events()
-        self.enable_keyboard()
-        self.standard_keyboard_styling()
-        self.round = 1
+        self.new_keyboard()
 
     def game_over(self):
         self.disable_binding_events()
@@ -24,15 +22,15 @@ class App(Keyboard, Board, endScreen, Error):
         self.end_screen()
 
     def save_game_data(self):  
-        guessed_correctly = self.word_guesses[-1] == self._word
-        tries = self.max_rounds if (guessed_correctly) else self.round - 1
+        guessed_correctly = self.word_guesses[-1] == self.word
+        tries = len(self.word_guesses)
 
         # Add the game info
         game = {   
-            "game_id": self.get_games_played() + 1, 
-            "correct_word": self._word,
-            "all_word_guesses": self.word_guesses,
-            "guessed_correctly": guessed_correctly,
+            "id": self.get_games_played(), 
+            "word": self.word,
+            "word_guesses": self.word_guesses,
+            "won": guessed_correctly,
             "tries": tries,
         }
         self.add_player_game(game)

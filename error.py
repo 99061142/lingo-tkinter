@@ -14,8 +14,8 @@ class Error(Window):
             pass
         finally:
             error_frame = tk.Frame(
-                self._board_frame,
-                bg=self._light_gray,
+                self.board_frame,
+                bg=self.light_gray,
                 pady=5,
             )
             error_frame.grid(row=0)
@@ -28,8 +28,8 @@ class Error(Window):
             self._error_frame,
             text=message,
             font=("Helvetica 15"),
-            background=self._light_gray,
-            foreground=self._red,
+            background=self.light_gray,
+            foreground=self.red,
         ).grid()
 
     def delete_error(self):

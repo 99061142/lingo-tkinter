@@ -11,6 +11,10 @@ class Keyboard(Window):
         self.create_keyboard()
         self.enable_binding_events()
 
+    def new_keyboard(self):
+        self.enable_keyboard()
+        self.standard_keyboard_styling()
+
     def create_keyboard(self):
         self.create_keyboard_frame()
         self.create_keyboard_buttons()
@@ -19,7 +23,7 @@ class Keyboard(Window):
         # Frame for the keyboard
         keyboard_frame = tk.Frame(
             self,
-            bg=self._window_color,
+            bg=self.window_color,
         )
         keyboard_frame.grid(row=1)
         keyboard_frame.place(relx=.5, rely=.80, anchor=tk.CENTER)
@@ -32,7 +36,7 @@ class Keyboard(Window):
             row_frame = tk.Frame(
                 self._keyboard_frame, 
                 pady=3,
-                bg=self._window_color,
+                bg=self.window_color,
             )
             row_frame.grid()
 
@@ -60,8 +64,8 @@ class Keyboard(Window):
 
     def standard_button_styling(self, button, char:str):
             button.config(
-                bg=self._light_gray,
-                fg=self._white,
+                bg=self.light_gray,
+                fg=self.white,
             )
 
     def button_config(self, char:str, color:str):
@@ -89,14 +93,14 @@ class Keyboard(Window):
             self.show_error("The word is not complete")
         elif(not word.real_word(self.get_current_word())):
             self.show_error("The word is not in the word list")
-        elif(self.round == self.max_rounds or self.word_guessed()):
-            self.word_guesses.append(self.get_current_word())
-            self.check_characters()
-            self.game_over()
         else:
             self.word_guesses.append(self.get_current_word())
             self.check_characters()
-            self.round += 1
+
+            if(self.round == self.max_rounds or self.word_guessed()):
+                self.game_over()
+            else:
+                self.round += 1
 
     def backspace_pressed(self):
         index = self.get_first_empty_index()

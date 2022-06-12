@@ -7,66 +7,54 @@ from tkinter import ttk
 class Board(Window):
     def __init__(self): 
         super().__init__()
-        self.round = 1
         self.max_rounds = 5
-        self._board_columns_chars = None
-        self._board_frame = None
-        self.word = None
+        self.new_board()
+
+    def new_board(self):
+        self.round = 1
         self.word_guesses = []
         self.board_labels = [{} for i in range(self.max_rounds)]
-        self.new_game()
+        self.word = word.random_word()
+        self.board_columns_chars = [[tk.StringVar() for i in range(self.get_word_length())] for i in range(self.max_rounds)]
+        self.board()
 
     def board(self):
         self.create_board_frame()   
         self.create_board_rows()
 
     def get_current_word_list(self) -> list:
-        return [char.get() for char in self._board_columns_chars[self.round - 1]] # Current row word list in the board
+        return [char.get() for char in self.board_columns_chars[self.round - 1]] # Current row word list in the board
 
     def get_current_word(self) -> str:
         return ''.join(self.get_current_word_list()) # Current row word in the board
 
-    def set_new_word(self):
-        self._word = word.random_word()
-
     def get_word_length(self) -> int:
-        return len(self._word)
+        return len(self.word)
 
     def word_guessed(self) -> bool:
-        return self.get_current_word() == self._word
-
-    def set_board_columns_chars(self):
-        self._board_columns_chars = [[tk.StringVar() for i in range(self.get_word_length())] for i in range(self.max_rounds)]
-
-    def new_game(self):
-        self.word_guesses = []
-        self.board_labels = [{} for i in range(self.max_rounds)]
-        self.set_new_word()
-        self.set_board_columns_chars()
-        self.board()
+        return self.get_current_word() == self.word
 
     def create_board_frame(self):
         # Delete the columns inside the board if the board already exitst, else create a new board
         try:
-            for widget in self._board_frame.winfo_children():
+            for widget in self.board_frame.winfo_children():
                 widget.destroy()
         except AttributeError:
             board_frame = tk.Frame(
                 self, 
-                bg=self._window_color, 
+                bg=self.window_color, 
                 pady=25,
             )
             board_frame.grid(row=0)
             board_frame.place(relx=0.5, rely=0.35, anchor=tk.CENTER)
-    
-            self._board_frame = board_frame
+            self.board_frame = board_frame
 
     def create_board_rows(self): 
         # For every round
         for row in range(self.max_rounds):
             board_row = tk.Frame(
-                self._board_frame,
-                bg=self._window_color, 
+                self.board_frame,
+                bg=self.window_color, 
                 pady=3,
             )
             board_row.grid()
@@ -77,16 +65,16 @@ class Board(Window):
                     board_row, 
                     width=50, 
                     height=50,
-                    background=self._column_background, 
+                    background=self.column_background, 
                 )
                 label_frame.pack_propagate(0) # Set fixed size
                 
                 label = ttk.Label(
                     label_frame,
-                    textvariable=self._board_columns_chars[row][col],
+                    textvariable=self.board_columns_chars[row][col],
                     font=("Helvetica 15"),  
-                    background=self._column_background, 
-                    foreground=self._white
+                    background=self.column_background, 
+                    foreground=self.white
                 )
                 label.pack(expand=True)
     
@@ -101,27 +89,27 @@ class Board(Window):
                 }
 
     def del_char_from_board(self, index:int):       
-        self._board_columns_chars[self.round - 1][index - 1].set('')
+        self.board_columns_chars[self.round - 1][index - 1].set('')
 
     def add_char_to_board(self, index:int, char:str):
-        self._board_columns_chars[self.round - 1][index].set(char)
+        self.board_columns_chars[self.round - 1][index].set(char)
 
     def get_first_empty_index(self):
         word_list = self.get_current_word_list()
-    
+
         if('' in word_list):
             return word_list.index('') 
 
     def check_characters(self):
-        correct_word = self._word
+        correct_word = self.word
 
-        for i, (correct_char, char) in enumerate(zip(self._word, self.get_current_word())):            
+        for i, (correct_char, char) in enumerate(zip(self.word, self.get_current_word())):            
             if char == correct_char:
-                color = self._green
+                color = self.green
             elif char in correct_word:
-                color = self._yellow
+                color = self.yellow
             else:
-                color = self._incorrect
+                color = self.incorrect
                 
             self.button_config(char, color)
             self.label_config(i, color)

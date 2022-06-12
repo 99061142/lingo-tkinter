@@ -1,19 +1,20 @@
 import tkinter as tk
 from scores import Scores
 
-class Window(tk.Tk, Scores):
-    # All colors for the application
-    _window_color = "#121212"
-    _green = "#268321"
-    _white = "#F0F0F0"
-    _red = "#FF0000"
-    _light_gray = "#888888"
-    _yellow = "#ACB22D"
-    _incorrect = "#3D3D3D"
-    _column_background = "#565758"
-    
+class Window(tk.Tk, Scores):    
     def __init__(self):
         super().__init__()
+        # All colors for the application
+        self.window_color = "#121212"
+        self.green = "#268321"
+        self.white = "#F0F0F0"
+        self.red = "#FF0000"
+        self.light_gray = "#888888"
+        self.yellow = "#ACB22D"
+        self.incorrect = "#3D3D3D"
+        self.column_background = "#565758"
+
+
         self.keyboard_keys = [      
             {'q': 'q', 'w': 'w', 'e': 'e', 'r': 'r', 't': 't', 'y': 'y', 'u': 'u' , 'i': 'i', 'o': 'o' , 'p': 'p'},
             {'a': 'a', 's': 's', 'd': 'd', 'f': 'f', 'g': 'g', 'h': 'h', 'j': 'j', 'k': 'k', 'l': 'l'},
@@ -27,7 +28,7 @@ class Window(tk.Tk, Scores):
         self.geometry("1000x500")
 
         self.config(
-            background=self._window_color,
+            background=self.window_color,
         )
 
     def enable_binding_events(self):
