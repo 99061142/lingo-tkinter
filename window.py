@@ -10,7 +10,7 @@ class Window(tk.Tk, Scores):
     _red = "#FF0000"
     _light_gray = "#888888"
     _key_incorrect_position = "#ACB22D"
-    _key_incorrect = "#3D3D3D"
+    _yellow = "#3D3D3D"
     
     def __init__(self):
         super().__init__()
@@ -167,6 +167,7 @@ class Window(tk.Tk, Scores):
         self.disable_binding_events()
         self.disable_keyboard()
         self.save_game_data()
+        self.end_screen()
 
     def save_game_data(self):  
         guessed_correctly = self.all_word_guesses[-1] == self._word
@@ -181,5 +182,3 @@ class Window(tk.Tk, Scores):
             "tries": tries,
         }
         self.add_player_game(game)
-
-
