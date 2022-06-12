@@ -44,7 +44,7 @@ class Keyboard(Window):
                 button = tk.Button(
                     row_frame, 
                     text=char.upper(),
-                    command=lambda char=char: self.key_pressed(char),
+                    command=lambda char=char: self.key_pressed(char.lower()),
                     width=width,
                 )
                 button.grid(
