@@ -31,9 +31,11 @@ class Window(tk.Tk, metaclass=Type):
         self.max_rounds = 5
         self._word = None
         self._board_columns_chars = None
+        self._board_frame = None
 
         # VALUES FOR THE WINDOW
         self.binding_events = [row.get(char) for row in self.keyboard_keys for char in row]
+        self._error_frame = None
 
         self.window_config()
         self.enable_binding_events()
@@ -82,12 +84,16 @@ class Window(tk.Tk, metaclass=Type):
 
     def char_pressed(self, char:str):
         index = self.get_first_empty_index()
+
+        # If the row is not full
         if(index != None):
             self.add_char_to_board(index, char)
     
     def enter_pressed(self):
-        if(not word.real_word(self.get_current_word())):
-            pass # Show error message
+        if(self.get_first_empty_index() != None):
+            self.show_error_message("The word is not complete")
+        elif(not word.real_word(self.get_current_word())):
+            self.show_error_message("The word is not in the word list")
         elif(self.round == self.max_rounds):  
             pass # end game
         elif(self.word_guessed()):
@@ -97,6 +103,8 @@ class Window(tk.Tk, metaclass=Type):
 
     def backspace_pressed(self):
         index = self.get_first_empty_index()
+
+        # If the board row is not empty
         if(index != 0):
             index = self.get_word_length() if(index == None) else index
             self.del_char_from_board(index)
@@ -113,8 +121,36 @@ class Window(tk.Tk, metaclass=Type):
         if('' in word_list):
             return word_list.index('') 
 
-    def get_current_word_list(self):
-        return [char.get() for char in self._board_columns_chars[self.round - 1]]
+    def get_current_word_list(self) -> list:
+        return [char.get() for char in self._board_columns_chars[self.round - 1]] # Current row word list in the board
 
-    def get_current_word(self):
-        return ''.join(self.get_current_word_list())
+    def get_current_word(self) -> str:
+        return ''.join(self.get_current_word_list()) # Current row word in the board
+
+    def show_error_message(self, message):        
+        # Delete the old error message if it exists 
+        try:
+            self._error_frame.destroy()
+        except AttributeError:
+            pass
+        
+        error_frame = tk.Frame(
+            self._board_frame,
+            bg=self._light_gray,
+            pady=5,
+        )
+
+        # Text in error frame
+        tk.Label(
+            error_frame,
+            text=message,
+            font=("Helvetica 15"),
+            background=self._light_gray,
+            foreground=self._red,
+        ).grid()
+
+        # Add the error message to the application
+        error_frame.grid(row=0)
+        self._error_frame = error_frame
+
+        error_frame.after(2000, lambda: error_frame.grid_forget()) # Remove the error message after 2 seconds
