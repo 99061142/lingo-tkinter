@@ -1,5 +1,4 @@
 import tkinter as tk
-import word
 from scores import Scores
 
 class Window(tk.Tk, Scores):
@@ -15,23 +14,13 @@ class Window(tk.Tk, Scores):
     
     def __init__(self):
         super().__init__()
-
-        # VALUES FOR THE KEYBOARD
-        # GUI keyboard characters / binding events for own keyboard
         self.keyboard_keys = [      
             {'q': 'q', 'w': 'w', 'e': 'e', 'r': 'r', 't': 't', 'y': 'y', 'u': 'u' , 'i': 'i', 'o': 'o' , 'p': 'p'},
             {'a': 'a', 's': 's', 'd': 'd', 'f': 'f', 'g': 'g', 'h': 'h', 'j': 'j', 'k': 'k', 'l': 'l'},
             {'Enter': '<Return>', 'z': 'z', 'x': 'x', 'c': 'c', 'v': 'v', 'b': 'b', 'n': 'n', 'm': 'm', 'BackSpace': '<BackSpace>'}
         ]
-        self.keyboard_chars = [char for row in self.keyboard_keys for char in row]
-        self.keyboard_buttons = {}
-
-        # VALUES FOR THE WINDOW
         self.binding_events = [row.get(char) for row in self.keyboard_keys for char in row]
-        
-
         self.window_config()
-        self.enable_binding_events()
 
     def window_config(self):
         self.title("Wordle clone")
@@ -40,9 +29,6 @@ class Window(tk.Tk, Scores):
         self.config(
             background=self._window_color,
         )
-
-    def binding_event_to_char(self, event) -> str:
-        return self.keyboard_chars[self.binding_events.index(event)]
 
     def enable_binding_events(self):
         for event in self.binding_events:
@@ -60,64 +46,3 @@ class Window(tk.Tk, Scores):
             # Unbind the uppercase character too
             if(len(event) == 1):
                 self.unbind(event.upper())
-    
-    def enable_keyboard(self):
-        for button in self.keyboard_buttons.values():
-            button.config(state="normal")
-
-    def disable_keyboard(self):
-        for button in self.keyboard_buttons.values():
-            button.config(state="disabled")
-
-    def key_pressed(self, char:str):
-        if(char == "enter"):
-            self.enter_pressed()
-        elif(char == "backspace"):
-            self.backspace_pressed()
-        else:
-            self.char_pressed(char)
-
-    def char_pressed(self, char:str):
-        index = self.get_first_empty_index()
-
-        # If the row is not full
-        if(index != None):
-            self.add_char_to_board(index, char)
-    
-    def enter_pressed(self):
-        if(self.get_first_empty_index() != None):
-            self.show_error("The word is not complete")
-        elif(not word.real_word(self.get_current_word())):
-            self.show_error("The word is not in the word list")
-        elif(self.round == self.max_rounds or self.word_guessed()):
-            self.word_guesses.append(self.get_current_word())
-            self.game_over()
-        else:
-            self.word_guesses.append(self.get_current_word())
-            self.round += 1
-
-    def backspace_pressed(self):
-        index = self.get_first_empty_index()
-
-        # If the board row is not empty
-        if(index != 0):
-            index = self.get_word_length() if(index == None) else index
-            self.del_char_from_board(index)
-
-    def del_char_from_board(self, index:int):       
-        self._board_columns_chars[self.round - 1][index - 1].set('')
-
-    def add_char_to_board(self, index:int, char:str):
-        self._board_columns_chars[self.round - 1][index].set(char)
-
-    def get_first_empty_index(self):
-        word_list = self.get_current_word_list()
-    
-        if('' in word_list):
-            return word_list.index('') 
-
-    def get_current_word_list(self) -> list:
-        return [char.get() for char in self._board_columns_chars[self.round - 1]] # Current row word list in the board
-
-    def get_current_word(self) -> str:
-        return ''.join(self.get_current_word_list()) # Current row word in the board

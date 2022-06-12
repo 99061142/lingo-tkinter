@@ -7,7 +7,7 @@ class App(Keyboard, Board, endScreen, Error):
     def __init__(self):
         super().__init__()
 
-    def start(self):    
+    def start(self):
         self.mainloop()
 
     def restart(self):
