@@ -11,6 +11,7 @@ class Window(tk.Tk, Scores):
     _light_gray = "#888888"
     _key_incorrect_position = "#ACB22D"
     _yellow = "#3D3D3D"
+    _column_background = "#565758"
     
     def __init__(self):
         super().__init__()
@@ -25,17 +26,9 @@ class Window(tk.Tk, Scores):
         self.keyboard_chars = [char for row in self.keyboard_keys for char in row]
         self.keyboard_buttons = {}
 
-        # VALUES FOR THE BOARD
-        self.round = 1
-        self.max_rounds = 5
-        self._word = None
-        self._board_columns_chars = None
-        self._board_frame = None
-        self.all_word_guesses = []
-
         # VALUES FOR THE WINDOW
         self.binding_events = [row.get(char) for row in self.keyboard_keys for char in row]
-        self._error_frame = None
+        
 
         self.window_config()
         self.enable_binding_events()
@@ -47,12 +40,6 @@ class Window(tk.Tk, Scores):
         self.config(
             background=self._window_color,
         )
-
-    def get_word_length(self) -> int:
-        return len(self._word)
-
-    def word_guessed(self) -> bool:
-        return self.get_current_word() == self._word
 
     def binding_event_to_char(self, event) -> str:
         return self.keyboard_chars[self.binding_events.index(event)]
@@ -99,14 +86,14 @@ class Window(tk.Tk, Scores):
     
     def enter_pressed(self):
         if(self.get_first_empty_index() != None):
-            self.show_error_message("The word is not complete")
+            self.show_error("The word is not complete")
         elif(not word.real_word(self.get_current_word())):
-            self.show_error_message("The word is not in the word list")
+            self.show_error("The word is not in the word list")
         elif(self.round == self.max_rounds or self.word_guessed()):
-            self.all_word_guesses.append(self.get_current_word())
+            self.word_guesses.append(self.get_current_word())
             self.game_over()
         else:
-            self.all_word_guesses.append(self.get_current_word())
+            self.word_guesses.append(self.get_current_word())
             self.round += 1
 
     def backspace_pressed(self):
@@ -134,51 +121,3 @@ class Window(tk.Tk, Scores):
 
     def get_current_word(self) -> str:
         return ''.join(self.get_current_word_list()) # Current row word in the board
-
-    def show_error_message(self, message):        
-        # Delete the old error message if it exists 
-        try:
-            self._error_frame.destroy()
-        except AttributeError:
-            pass
-        
-        error_frame = tk.Frame(
-            self._board_frame,
-            bg=self._light_gray,
-            pady=5,
-        )
-
-        # Text in error frame
-        tk.Label(
-            error_frame,
-            text=message,
-            font=("Helvetica 15"),
-            background=self._light_gray,
-            foreground=self._red,
-        ).grid()
-
-        # Add the error message to the application
-        error_frame.grid(row=0)
-        self._error_frame = error_frame
-
-        error_frame.after(2000, lambda: error_frame.grid_forget()) # Remove the error message after 2 seconds
-
-    def game_over(self):
-        self.disable_binding_events()
-        self.disable_keyboard()
-        self.save_game_data()
-        self.end_screen()
-
-    def save_game_data(self):  
-        guessed_correctly = self.all_word_guesses[-1] == self._word
-        tries = self.round if (guessed_correctly) else self.round - 1
-
-        # Add the game info
-        game = {   
-            "game_id": self.get_games_played() + 1, 
-            "correct_word": self._word,
-            "all_word_guesses": self.all_word_guesses,
-            "guessed_correctly": guessed_correctly,
-            "tries": tries,
-        }
-        self.add_player_game(game)
