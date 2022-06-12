@@ -73,6 +73,14 @@ class Window(tk.Tk, metaclass=Type):
             # Unbind the uppercase character too
             if(len(event) == 1):
                 self.unbind(event.upper())
+    
+    def enable_keyboard(self):
+        for button in self.keyboard_buttons.values():
+            button.config(state="normal")
+
+    def disable_keyboard(self):
+        for button in self.keyboard_buttons.values():
+            button.config(state="disabled")
 
     def key_pressed(self, char:str):
         if(char == "enter"):
@@ -95,9 +103,9 @@ class Window(tk.Tk, metaclass=Type):
         elif(not word.real_word(self.get_current_word())):
             self.show_error_message("The word is not in the word list")
         elif(self.round == self.max_rounds):  
-            pass # end game
+            self.game_over()
         elif(self.word_guessed()):
-            pass # end game
+            self.game_over()
         else:
             self.round += 1
 
@@ -154,3 +162,7 @@ class Window(tk.Tk, metaclass=Type):
         self._error_frame = error_frame
 
         error_frame.after(2000, lambda: error_frame.grid_forget()) # Remove the error message after 2 seconds
+
+    def game_over(self):
+        self.disable_binding_events()
+        self.disable_keyboard()
