@@ -1,7 +1,7 @@
 from board import Board
 from keyboard import Keyboard
 
-class App(Board, Keyboard):
+class App(Keyboard, Board):
     def __init__(self):
         super().__init__()
 
@@ -10,6 +10,8 @@ class App(Board, Keyboard):
 
     def restart(self):
         pass
+
+
 
 
 if __name__ == "__main__":
