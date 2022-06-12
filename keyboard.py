@@ -65,12 +65,12 @@ class Keyboard(Window):
 
     def char_incorrect(self, char:str):
         self.keyboard_buttons[char].config(
-            background=self._yellow,
+            background=self._incorrect,
         )
 
     def char_incorrect_position(self, char:str):
         self.keyboard_buttons[char].config(
-            background=self._key_incorrect_position,
+            background=self._yellow,
         )
     
     def char_correct(self, char:str):
@@ -100,9 +100,11 @@ class Keyboard(Window):
             self.show_error("The word is not in the word list")
         elif(self.round == self.max_rounds or self.word_guessed()):
             self.word_guesses.append(self.get_current_word())
+            self.check_characters()
             self.game_over()
         else:
             self.word_guesses.append(self.get_current_word())
+            self.check_characters()
             self.round += 1
 
     def backspace_pressed(self):
@@ -123,3 +125,7 @@ class Keyboard(Window):
 
     def binding_event_to_char(self, event) -> str:
         return self.keyboard_chars[self.binding_events.index(event)]
+
+    def standard_keyboard_styling(self):
+        for char, button in self.keyboard_buttons.items():
+            self.standard_button_styling(button, char)
