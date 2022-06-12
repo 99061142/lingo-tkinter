@@ -63,19 +63,9 @@ class Keyboard(Window):
                 fg=self._white,
             )
 
-    def char_incorrect(self, char:str):
+    def button_config(self, char:str, color:str):
         self.keyboard_buttons[char].config(
-            background=self._incorrect,
-        )
-
-    def char_incorrect_position(self, char:str):
-        self.keyboard_buttons[char].config(
-            background=self._yellow,
-        )
-    
-    def char_correct(self, char:str):
-        self.keyboard_buttons[char].config(
-            background=self._green,
+            bg=color,
         )
 
     def key_pressed(self, char:str):
