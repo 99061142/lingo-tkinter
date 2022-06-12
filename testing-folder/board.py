@@ -25,7 +25,7 @@ class Board(Window):
         self.set_board_columns_chars()
         self.board()
 
-    def get_word_length(self):
+    def get_word_length(self) -> int:
         return len(self._word)
 
     def board(self):
