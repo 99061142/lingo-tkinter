@@ -34,32 +34,18 @@ class Window(tk.Tk, metaclass=Type):
             background=self._window_color,
         )
 
-    def enable_binding_event(self, event:str):
-        self.bind(event, lambda event=event: print(event))
 
-        # Bind the uppercase character too
-        if(len(event) == 1):
-            self.bind(event.upper(), lambda event=event: print(event))
-
-    def binding_event_to_char(self, event):
-        
+    def binding_event_to_char(self, event) -> str:
         return self.keyboard_chars[self.binding_events.index(event)]
 
     def enable_binding_events(self):
         for event in self.binding_events:
-            char = self.binding_event_to_char(event).lower()
+            char = self.binding_event_to_char(event).lower
             self.bind(event, lambda event, char=char: print(char))
 
             # Bind the uppercase character too
             if(len(event) == 1):
                 self.bind(event.upper(), lambda event, char=char: print(char))
-    
-    def disable_binding_event(self, event:str):
-        self.unbind(event)
-
-        # Unbind the uppercase character too
-        if(len(event) == 1):
-            self.unbind(event.upper())
 
     def disable_binding_events(self):
         for event in self.binding_events:
