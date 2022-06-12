@@ -4,7 +4,6 @@ import tkinter as tk
 class endScreen(Window):
     def __init__(self):
         super().__init__()
-        self._end_frame = None
 
     def end_frame(self):
         end_frame = tk.Frame(
@@ -14,21 +13,21 @@ class endScreen(Window):
             pady=25,
         )
         end_frame.grid(row=0)
-        end_frame.place(relx=0.5, rely=0.5, anchor=tk.CENTER) # Reset frame centered above board frame
-        self._end_frame = end_frame
+        end_frame.place(relx=0.5, rely=0.5, anchor=tk.CENTER) # Frame centered above board frame
+        return end_frame
 
-    def end_label(self):
+    def end_label(self, end_frame):
         tk.Label(
-            self._end_frame,
+            end_frame,
             text="Game over",
             font=("Helvetica 15"),
             background=self.light_gray,
             foreground=self.red,
         ).grid(pady=25)
 
-    def end_button(self):
+    def end_button(self, end_frame):
         tk.Button(
-            self._end_frame,
+            end_frame,
             text="Play again",
             font=("Helvetica 15"),
             background=self.incorrect,
@@ -37,6 +36,6 @@ class endScreen(Window):
         ).grid()
 
     def end_screen(self):
-        self.end_frame()
-        self.end_label()
-        self.end_button()
+        end_frame = self.end_frame()
+        self.end_label(end_frame)
+        self.end_button(end_frame)
