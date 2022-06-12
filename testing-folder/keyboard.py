@@ -28,7 +28,7 @@ class Keyboard(Window):
                 button = tk.Button(
                     row_frame, 
                     text=char.upper(),
-                    command=lambda char=char: print(char.lower()),
+                    command=lambda char=char: self.key_pressed(char),
                 )
                 button.grid(
                     row=row, 
