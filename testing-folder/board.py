@@ -7,7 +7,6 @@ from tkinter import ttk
 class Board(Window):
     def __init__(self):
         super().__init__()
-        self._board_frame = None
         self.new_game()
 
     def set_new_word(self):
