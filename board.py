@@ -57,6 +57,8 @@ class Board(Window):
                 pady=25,
             )
             board_frame.grid(row=0)
+            board_frame.place(relx=0.5, rely=0.35, anchor=tk.CENTER)
+    
             self._board_frame = board_frame
 
     def create_board_rows(self): 
@@ -68,6 +70,7 @@ class Board(Window):
                 pady=3,
             )
             board_row.grid()
+            board_row.pack_propagate(0) # Set fixed size
 
             for col in range(self.get_word_length()):
                 label_frame = tk.Frame(
@@ -93,10 +96,9 @@ class Board(Window):
                     padx=5
                 )
                 self.board_labels[row][col] = {
-                    "label_frame": label_frame,
+                    "frame": label_frame,
                     "label": label,
                 }
-                
 
     def del_char_from_board(self, index:int):       
         self._board_columns_chars[self.round - 1][index - 1].set('')

@@ -22,6 +22,7 @@ class Keyboard(Window):
             bg=self._window_color,
         )
         keyboard_frame.grid(row=1)
+        keyboard_frame.place(relx=.5, rely=.80, anchor=tk.CENTER)
         self._keyboard_frame = keyboard_frame
 
     def create_keyboard_buttons(self):
