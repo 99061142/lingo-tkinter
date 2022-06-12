@@ -14,6 +14,8 @@ class App(Keyboard, Board, endScreen, Error):
         self.new_game()
         self.enable_binding_events()
         self.enable_keyboard()
+        self.standard_keyboard_styling()
+        self.round = 1
 
     def game_over(self):
         self.disable_binding_events()
