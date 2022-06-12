@@ -8,9 +8,6 @@ class App(Keyboard, Board):
     def start(self):
         self.mainloop()
 
-    def restart(self):
-        pass
-
 
 
 
