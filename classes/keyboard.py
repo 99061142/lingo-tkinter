@@ -1,6 +1,11 @@
-from classes.window import Window
-import tkinter as tk
-import modules.word as word
+try:
+    from classes.window import Window
+    import tkinter as tk
+    import modules.word as word
+except ModuleNotFoundError:
+    error_red = "\033[31m" + "This file is not meant to be run directly" + "\033[0m"
+    print(error_red)
+    exit()
 
 class Keyboard(Window):
     def __init__(self):

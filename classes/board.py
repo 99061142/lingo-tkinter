@@ -1,7 +1,12 @@
-from classes.window import Window
-import modules.word as word
-import tkinter as tk
-from tkinter import ttk
+try:
+    from classes.window import Window
+    import modules.word as word
+    import tkinter as tk
+    from tkinter import ttk
+except ModuleNotFoundError:
+    error_red = "\033[31m" + "This file is not meant to be run directly" + "\033[0m"
+    print(error_red)
+    exit()
 
 class Board(Window):
     def __init__(self): 

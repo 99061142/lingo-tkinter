@@ -1,5 +1,10 @@
-import tkinter as tk
-from classes.scores import Scores
+try:
+    import tkinter as tk
+    from classes.scores import Scores
+except ModuleNotFoundError:
+    error_red = "\033[31m" + "This file is not meant to be run directly" + "\033[0m"
+    print(error_red)
+    exit()
 
 class Window(tk.Tk, Scores):    
     def __init__(self):
@@ -14,12 +19,13 @@ class Window(tk.Tk, Scores):
         self.incorrect = "#3D3D3D"
         self.column_background = "#565758"
         
+        # GUI keyboard characters and keyboard bindings
         self.keyboard_keys = [      
             {'q': 'q', 'w': 'w', 'e': 'e', 'r': 'r', 't': 't', 'y': 'y', 'u': 'u' , 'i': 'i', 'o': 'o' , 'p': 'p'},
             {'a': 'a', 's': 's', 'd': 'd', 'f': 'f', 'g': 'g', 'h': 'h', 'j': 'j', 'k': 'k', 'l': 'l'},
             {'Enter': '<Return>', 'z': 'z', 'x': 'x', 'c': 'c', 'v': 'v', 'b': 'b', 'n': 'n', 'm': 'm', 'BackSpace': '<BackSpace>'}
         ]
-        self.binding_events = [row.get(char) for row in self.keyboard_keys for char in row]
+        self.binding_events = [row.get(char) for row in self.keyboard_keys for char in row] # keyboard bindings
         self.window_config()
 
     def window_config(self):
@@ -32,7 +38,7 @@ class Window(tk.Tk, Scores):
 
     def enable_binding_events(self):
         for event in self.binding_events:
-            char = self.binding_event_to_char(event).lower()
+            char = self.binding_event_to_char(event).lower() # Character on the keyboard
             self.bind(event, lambda event, char=char: self.key_pressed(char))
 
             # Bind the uppercase character too

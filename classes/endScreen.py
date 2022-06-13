@@ -1,5 +1,10 @@
-from classes.window import Window
-import tkinter as tk
+try:
+    from classes.window import Window
+    import tkinter as tk
+except ModuleNotFoundError:
+    error_red = "\033[31m" + "This file is not meant to be run directly" + "\033[0m"
+    print(error_red)
+    exit()
 
 class endScreen(Window):
     def __init__(self):

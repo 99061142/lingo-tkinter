@@ -1,14 +1,18 @@
-from classes.window import Window
-import tkinter as tk
+try:
+    from classes.window import Window
+    import tkinter as tk
+except ModuleNotFoundError:
+    error_red = "\033[31m" + "This file is not meant to be run directly" + "\033[0m"
+    print(error_red)
+    exit()
 
 class Error(Window):
     def __init__(self):
         super().__init__()
 
     def create_error_frame(self):
-        # Delete the old error message if it exists 
         try:
-            self._error_frame.destroy()
+            self._error_frame.destroy() # Delete the old error message if it exists 
         except AttributeError:
             pass
         finally:
