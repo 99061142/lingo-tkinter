@@ -14,9 +14,19 @@ class Scores(metaclass=Type):
     def get_games_played(self) -> int:
         return len(self.get_scores())
 
-    def add_player_game(self, game:dict):
+    def create_game_data(self) -> dict:
+        data = {   
+            "id": self.get_games_played(), 
+            "word": self.word,
+            "word_guesses": self.word_guesses,
+            "won": self.word_guessed(),
+            "tries": len(self.word_guesses),
+        }
+        return data
+
+    def add_player_game(self):
         scores = self.get_scores()
-        scores.append(game)
+        scores.append(self.create_game_data())
         
         with open(self._file, "w") as file:
             json.dump(scores, file, indent=4)
