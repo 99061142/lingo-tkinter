@@ -34,10 +34,3 @@ class App(Keyboard, Board, endScreen, Error):
             "tries": tries,
         }
         self.add_player_game(game)
-
-
-
-
-if __name__ == "__main__":
-    app = App()
-    app.start()
