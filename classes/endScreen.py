@@ -1,4 +1,4 @@
-from window import Window
+from classes.window import Window
 import tkinter as tk
 
 class endScreen(Window):

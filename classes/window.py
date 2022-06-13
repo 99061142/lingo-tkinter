@@ -1,5 +1,5 @@
 import tkinter as tk
-from scores import Scores
+from classes.scores import Scores
 
 class Window(tk.Tk, Scores):    
     def __init__(self):

@@ -1,6 +1,6 @@
-from window import Window
+from classes.window import Window
 import tkinter as tk
-import word
+import modules.word as word
 
 class Keyboard(Window):
     def __init__(self):
@@ -20,7 +20,6 @@ class Keyboard(Window):
         self.create_keyboard_buttons()
 
     def create_keyboard_frame(self):
-        # Frame for the keyboard
         keyboard_frame = tk.Frame(
             self,
             bg=self.window_color,
@@ -32,7 +31,6 @@ class Keyboard(Window):
     def create_keyboard_buttons(self):
         # For every keyboard row
         for row, row_chars in enumerate(self.keyboard_keys):
-            # Frame for the keyboard row
             row_frame = tk.Frame(
                 self._keyboard_frame, 
                 pady=3,
@@ -40,7 +38,7 @@ class Keyboard(Window):
             )
             row_frame.grid()
 
-            # Keyboard button for each key
+            # For every key inside the row
             for col, char in enumerate(row_chars):
                 big_keys = ['enter', 'backspace'] # Keys that are bigger on the keyboard
                 width = 15 if char.lower() in big_keys else 10

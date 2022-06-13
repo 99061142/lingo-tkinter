@@ -1,9 +1,11 @@
-from topHierachy import Type
+from classes.topHierachy import Type
 import json
 
 class Scores(metaclass=Type):
+    _file = "storage/scores.json"
+
     def get_scores(self) -> list:
-        with open("scores.json", "r") as file:
+        with open(self._file, "r") as file:
             data = json.load(file)
         file.close()
         
@@ -16,6 +18,6 @@ class Scores(metaclass=Type):
         scores = self.get_scores()
         scores.append(game)
         
-        with open("scores.json", "w") as file:
+        with open(self._file, "w") as file:
             json.dump(scores, file, indent=4)
         file.close() 

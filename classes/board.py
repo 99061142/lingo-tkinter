@@ -1,8 +1,7 @@
-from window import Window
-import word
+from classes.window import Window
+import modules.word as word
 import tkinter as tk
 from tkinter import ttk
-
 
 class Board(Window):
     def __init__(self): 

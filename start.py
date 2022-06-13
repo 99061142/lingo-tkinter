@@ -1,7 +1,7 @@
-from board import Board
-from keyboard import Keyboard
-from endScreen import endScreen
-from error import Error
+from classes.board import Board
+from classes.keyboard import Keyboard
+from classes.endScreen import endScreen
+from classes.error import Error
 
 class App(Keyboard, Board, endScreen, Error):
     def __init__(self):
