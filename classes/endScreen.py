@@ -10,7 +10,7 @@ class EndScreen(Window):
         super().__init__()
 
     def end_message(self) -> dict:
-        if(self.word_guessed()):
+        if self.word_guessed():
             return {
                 'message': "You won!",
                 'color': self.green

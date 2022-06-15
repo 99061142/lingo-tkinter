@@ -107,7 +107,7 @@ class Board(Window):
     def get_first_empty_index(self):
         word_list = self.get_current_word_list()
 
-        if('' in word_list):
+        if '' in word_list:
             return word_list.index('') 
 
     def check_characters(self):
@@ -125,7 +125,7 @@ class Board(Window):
             self.button_config(char, color)
             self.label_config(index, color)
 
-            if(char in correct_word):
+            if char in correct_word:
                 correct_word = correct_word.replace(char, '')
 
     def label_config(self, index:int, color:str):

@@ -41,7 +41,7 @@ class Window(tk.Tk, Scores):
             self.bind(event, lambda event, char=char: self.key_pressed(char))
 
             # Bind the uppercase character too
-            if(len(event) == 1):
+            if len(event) == 1:
                 self.bind(event.upper(), lambda event, char=char: self.key_pressed(char))
 
     def disable_binding_events(self):
@@ -49,5 +49,5 @@ class Window(tk.Tk, Scores):
             self.unbind(event)
 
             # Unbind the uppercase character too
-            if(len(event) == 1):
+            if len(event) == 1:
                 self.unbind(event.upper())
