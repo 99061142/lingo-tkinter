@@ -1,10 +1,9 @@
-try:
-    import tkinter as tk
-    from classes.scores import Scores
-except ModuleNotFoundError:
-    error_red = "\033[31m" + "This file is not meant to be run directly" + "\033[0m"
-    print(error_red)
+if __name__ == "__main__":
+    error_message = "Start this program with the \"start.py\" file"
+    print(f"\033[1;31m{error_message}\033[0m")
     exit()
+else:
+    from lib.lib import *
 
 class Window(tk.Tk, Scores):    
     def __init__(self):

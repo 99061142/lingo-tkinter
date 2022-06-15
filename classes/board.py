@@ -1,12 +1,9 @@
-try:
-    from classes.window import Window
-    import modules.word as word
-    import tkinter as tk
-    from tkinter import ttk
-except ModuleNotFoundError:
-    error_red = "\033[31m" + "This file is not meant to be run directly" + "\033[0m"
-    print(error_red)
+if __name__ == "__main__":
+    error_message = "Start this program with the \"start.py\" file"
+    print(f"\033[1;31m{error_message}\033[0m")
     exit()
+else:
+    from lib.lib import *
 
 class Board(Window):
     def __init__(self): 
@@ -22,7 +19,7 @@ class Board(Window):
         self.board_columns_chars = [[tk.StringVar() for i in range(self.get_word_length())] for i in range(self.max_rounds)]
         self.board()
 
-    def board(self):
+    def board(self): 
         self.create_board_frame()   
         self.create_board_rows()
 
