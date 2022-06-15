@@ -8,14 +8,18 @@ else:
 class Scores(metaclass=Type):
     _file = "storage/scores.json"
 
-
-    def set_file(self):
-        self._file = "storage/scores.json"
-
     def get_games(self) -> list:
+        # Create the scores file if it wasn't created yet
+        if not os.path.exists(self._file):
+            with open(self._file, 'w') as file:
+                data = []
+                json.dump([], file, indent=4)
+            file.close()
+
         with open(self._file, "r") as file:
             data = json.load(file)
         file.close()
+
         return data
 
     def get_games_played(self) -> int:
