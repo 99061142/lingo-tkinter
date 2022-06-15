@@ -12,7 +12,6 @@ class Scores(metaclass=Type):
         # Create the scores file if it wasn't created yet
         if not os.path.exists(self._file):
             with open(self._file, 'w') as file:
-                data = []
                 json.dump([], file, indent=4)
             file.close()
 
@@ -31,7 +30,7 @@ class Scores(metaclass=Type):
             "word": self.word,
             "word_guesses": self.word_guesses,
             "won": self.word_guessed(),
-            "tries": len(self.word_guesses),
+            "tries": len(self.word_guesses)
         }
         return data
 
@@ -40,5 +39,9 @@ class Scores(metaclass=Type):
         scores.append(self.create_game_data())
         
         with open(self._file, "w") as file:
-            json.dump(scores, file, indent=4)
+            json.dump(
+                scores, 
+                file, 
+                indent=4
+            )
         file.close() 

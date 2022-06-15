@@ -44,10 +44,16 @@ class Board(Window):
             board_frame = tk.Frame(
                 self, 
                 bg=self.window_color, 
-                pady=25,
+                pady=25
             )
-            board_frame.grid(row=0)
-            board_frame.place(relx=0.5, rely=0.35, anchor=tk.CENTER)
+            board_frame.grid(
+                row=0
+            )
+            board_frame.place(
+                relx=0.5, 
+                rely=0.35, 
+                anchor=tk.CENTER
+            )
             self.board_frame = board_frame
 
     def create_board_rows(self): 
@@ -56,7 +62,7 @@ class Board(Window):
             board_row = tk.Frame(
                 self.board_frame,
                 bg=self.window_color, 
-                pady=3,
+                pady=3
             )
             board_row.grid()
             board_row.pack_propagate(0) # Set fixed size
@@ -66,7 +72,7 @@ class Board(Window):
                     board_row, 
                     width=50, 
                     height=50,
-                    background=self.column_background, 
+                    background=self.column_background
                 )
                 label_frame.pack_propagate(0) # Set fixed size
                 
@@ -77,16 +83,19 @@ class Board(Window):
                     background=self.column_background, 
                     foreground=self.white
                 )
-                label.pack(expand=True)
+                label.pack(
+                    expand=True
+                )
     
                 label_frame.grid(
                     row=row, 
                     column=col, 
                     padx=5
                 )
+
                 self.board_labels[row][col] = {
                     "frame": label_frame,
-                    "label": label,
+                    "label": label
                 }
 
     def del_char_from_board(self, index:int):       
@@ -104,7 +113,8 @@ class Board(Window):
     def check_characters(self):
         correct_word = self.word
 
-        for i, (correct_char, char) in enumerate(zip(self.word, self.get_current_word())):            
+        # Change the styling of the keys / board columns based on the guessed character
+        for index, (correct_char, char) in enumerate(zip(self.word, self.get_current_word())):            
             if char == correct_char:
                 color = self.green
             elif char in correct_word:
@@ -113,13 +123,11 @@ class Board(Window):
                 color = self.incorrect
                 
             self.button_config(char, color)
-            self.label_config(i, color)
+            self.label_config(index, color)
 
             if(char in correct_word):
                 correct_word = correct_word.replace(char, '')
 
     def label_config(self, index:int, color:str):
         for label_data in self.board_labels[self.round - 1][index].values():
-            label_data.config(
-                background=color,
-            )
+            label_data.config(background=color)

@@ -18,9 +18,11 @@ class Error(Window):
             error_frame = tk.Frame(
                 self.board_frame,
                 bg=self.light_gray,
-                pady=5,
+                pady=5
             )
-            error_frame.grid(row=0)
+            error_frame.grid(
+                row=0
+            )
             self._error_frame = error_frame
             error_frame.after(2000, lambda: error_frame.grid_forget()) # Remove the error message after x seconds
 
@@ -30,7 +32,7 @@ class Error(Window):
             text=message,
             font=("Helvetica 15"),
             background=self.light_gray,
-            foreground=self.red,
+            foreground=self.red
         ).grid()
 
     def show_error(self, message:str):

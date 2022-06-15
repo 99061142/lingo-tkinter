@@ -24,10 +24,15 @@ class Keyboard(Window):
     def create_keyboard_frame(self):
         keyboard_frame = tk.Frame(
             self,
-            bg=self.window_color,
+            bg=self.window_color
         )
         keyboard_frame.grid(row=1)
-        keyboard_frame.place(relx=.5, rely=.80, anchor=tk.CENTER)
+        keyboard_frame.place(
+            relx=.5, 
+            rely=.80, 
+            anchor=tk.CENTER
+        )
+
         self._keyboard_frame = keyboard_frame
 
     def create_keyboard_buttons(self):
@@ -36,7 +41,7 @@ class Keyboard(Window):
             row_frame = tk.Frame(
                 self._keyboard_frame, 
                 pady=3,
-                bg=self.window_color,
+                bg=self.window_color
             )
             row_frame.grid()
 
@@ -49,14 +54,14 @@ class Keyboard(Window):
                     row_frame, 
                     text=char.upper(),
                     command=lambda char=char: self.key_pressed(char.lower()),
-                    width=width,
+                    width=width
                 )
                 button.grid(
                     row=row, 
                     column=col, 
-                    padx=3,
+                    padx=3
                 )  
-                self.standard_button_styling(button, char) # Button color styling
+                self.standard_button_styling(button, char) # Color styling for the button
 
                 # Add the button to the dictionary
                 binding_name = self.keyboard_keys[row][char]
@@ -65,12 +70,12 @@ class Keyboard(Window):
     def standard_button_styling(self, button, char:str):
             button.config(
                 bg=self.light_gray,
-                fg=self.white,
+                fg=self.white
             )
 
     def button_config(self, char:str, color:str):
         self.keyboard_buttons[char].config(
-            bg=color,
+            bg=color
         )
 
     def key_pressed(self, char:str):

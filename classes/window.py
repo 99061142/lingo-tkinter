@@ -32,7 +32,7 @@ class Window(tk.Tk, Scores):
         self.geometry("1000x500")
 
         self.config(
-            background=self.window_color,
+            background=self.window_color
         )
 
     def enable_binding_events(self):
