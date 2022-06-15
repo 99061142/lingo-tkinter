@@ -1,5 +1,6 @@
 if __name__ == "__main__":
-    print("\033[1;31m" + "Start this program with the \"start.py\" file" + "\033[0m")
+    error_message = "Start this program with the \"start.py\" file"
+    print(f"\033[1;31m{error_message}\033[0m")
     exit()
 else:
     from lib.lib import *
@@ -7,7 +8,6 @@ else:
 class Keyboard(Window):
     def __init__(self):
         super().__init__()
-        self._keyboard_frame = None
         self.keyboard_chars = [char for row in self.keyboard_keys for char in row]
         self.keyboard_buttons = {}
         self.create_keyboard()
