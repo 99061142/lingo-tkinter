@@ -87,11 +87,11 @@ class Keyboard(Window):
             self.char_pressed(char)
 
     def char_pressed(self, char:str):
-        index = self.get_first_empty_index()
+        empty_index = self.get_first_empty_index()
 
-        # If the row is not full
-        if index != None:
-            self.add_char_to_board(index, char)
+        # If the row isn't full
+        if empty_index != None:
+            self.add_char_to_board(empty_index, char)
     
     def enter_pressed(self):
         if self.get_first_empty_index() != None:
@@ -108,12 +108,11 @@ class Keyboard(Window):
                 self.round += 1
 
     def backspace_pressed(self):
-        index = self.get_first_empty_index()
-
-        # If the row is not empty
-        if index != 0:
-            index = self.get_word_length() if index == None else index
-            self.del_char_from_board(index)
+        # Delete column char that is lastly added
+        empty_index = self.get_word_length() if self.get_first_empty_index() == None else self.get_first_empty_index()
+        
+        if empty_index != 0:
+            self.del_char_from_board(empty_index)
 
     def enable_keyboard(self):
         for button in self.keyboard_buttons.values():
