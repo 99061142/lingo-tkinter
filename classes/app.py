@@ -8,9 +8,14 @@ else:
 class App(Keyboard, Board, EndScreen, Error):
     def __init__(self):
         super().__init__()
+        self.protocol("WM_DELETE_WINDOW", self.close) # When window gets closed
 
     def start(self):   
         self.mainloop()
+
+    def close(self):
+        self.add_player_game()
+        self.destroy()
 
     def restart(self):
         self.enable_binding_events()
