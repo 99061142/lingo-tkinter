@@ -15,6 +15,10 @@ class Scores(metaclass=Type):
         file.close()
 
     def get_games(self) -> list:
+        # If the scores file doesn't exists
+        if not os.path.exists(self._file):
+            self.create_file()  
+
         with open(self._file, "r") as file:
             data = json.load(file)
         file.close()
@@ -35,9 +39,7 @@ class Scores(metaclass=Type):
         return data
 
     def add_player_game(self):
-        # If the scores file doesn't exists
-        if not os.path.exists(self._file):
-            self.create_file()    
+        print("test")  
 
         scores = self.get_games()
         scores.append(self.create_game_data())
@@ -49,3 +51,12 @@ class Scores(metaclass=Type):
                 indent=4
             )
         file.close() 
+
+
+    def previous_game(self):
+        return self.get_games()[-1] if self.get_games() else None
+
+    def previous_word(self):
+        previous_game = self.previous_game()
+
+        return previous_game['word'] if previous_game else None
