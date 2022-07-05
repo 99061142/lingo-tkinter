@@ -6,16 +6,10 @@ else:
     from lib.lib import *
 
 class Board(Window):
-    def __init__(self): 
+    def __init__(self):
         super().__init__()
         self.max_rounds = 5
         self.new_board()
-
-    #def get_word(self):
-    #    return self.previous_word() if self.previous_game_over() == False else word.random_word()
-
-    #def get_word_guessed(self):
-    #    return [] if self.previous_game_over() else self.previous_word_guessed()
 
     def get_board_columns_char(self):
         board_columns_char = [[tk.StringVar() for i in range(self.get_word_length())] for i in range(self.max_rounds)]
@@ -25,7 +19,6 @@ class Board(Window):
                 for col, char in enumerate(word):
                     board_columns_char[row][col].set(char)
         return board_columns_char
-
 
     def new_board(self):
         self.round = 1 if self.previous_game_over() else self.previous_round() + 1
@@ -126,11 +119,12 @@ class Board(Window):
         if '' in word_list:
             return word_list.index('') 
 
-    def check_characters(self):
+    def check_characters(self, word:str=None, row:int=None):
         correct_word = self.word
+        word = word or self.get_current_word()
 
         # Change the styling of the keys / board columns based on the guessed character
-        for index, (correct_char, char) in enumerate(zip(self.word, self.get_current_word())):            
+        for index, (correct_char, char) in enumerate(zip(self.word, word)):            
             if char == correct_char:
                 color = self.green
             elif char in correct_word:
@@ -139,11 +133,13 @@ class Board(Window):
                 color = self.incorrect
                 
             self.button_config(char, color)
-            self.label_config(index, color)
+            self.label_config(index, color, row)
 
             if char in correct_word:
                 correct_word = correct_word.replace(char, '')
 
-    def label_config(self, index:int, color:str):
-        for label_data in self.board_labels[self.round - 1][index].values():
+    def label_config(self, index:int, color:str, row:int=None):
+        row = row if row != None else self.round - 1
+
+        for label_data in self.board_labels[row][index].values():
             label_data.config(background=color)
