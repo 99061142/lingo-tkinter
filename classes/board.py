@@ -11,15 +11,29 @@ class Board(Window):
         self.max_rounds = 5
         self.new_board()
 
-    def get_word(self):
-        return self.previous_word() if self.previous_game_over() == False else word.random_word()
+    #def get_word(self):
+    #    return self.previous_word() if self.previous_game_over() == False else word.random_word()
+
+    #def get_word_guessed(self):
+    #    return [] if self.previous_game_over() else self.previous_word_guessed()
+
+    def get_board_columns_char(self):
+        board_columns_char = [[tk.StringVar() for i in range(self.get_word_length())] for i in range(self.max_rounds)]
+
+        if not self.previous_game_over():
+            for row, word in enumerate(self.word_guesses):
+                for col, char in enumerate(word):
+                    board_columns_char[row][col].set(char)
+        return board_columns_char
+
 
     def new_board(self):
-        self.round = 1
-        self.word_guesses = []
+        self.word_guesses = [] if self.previous_game_over() else self.previous_word_guessed()
         self.board_labels = [{} for i in range(self.max_rounds)]
-        self.word = self.get_word()
-        self.board_columns_chars = [[tk.StringVar() for i in range(self.get_word_length())] for i in range(self.max_rounds)]
+        self.word = self.previous_word() if self.previous_game_over() == False else word.random_word()
+        self.board_columns_chars = self.get_board_columns_char()
+        self.round = 1 if self.previous_game_over() else self.previous_round() + 1
+        print(self.round)
         self.board()
 
     def board(self): 

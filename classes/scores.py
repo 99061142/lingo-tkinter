@@ -61,6 +61,12 @@ class Scores(metaclass=Type):
     def previous_game_over(self):
         return self.previous_game()['game_over'] if self.previous_game() else None
 
+    def previous_word_guessed(self):
+        return self.previous_game()['word_guesses'] if self.previous_game() else None
+    
+    def previous_round(self):
+        return self.previous_game()['tries'] if self.previous_game() else None
+
     def game_is_over(self):
         try:
             self.state()
