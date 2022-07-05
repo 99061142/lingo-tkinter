@@ -14,8 +14,8 @@ class App(Keyboard, Board, EndScreen, Error):
         self.mainloop()
 
     def close(self):
-        self.add_player_game()
         self.destroy()
+        self.add_player_game()
 
     def restart(self):
         self.enable_binding_events()
