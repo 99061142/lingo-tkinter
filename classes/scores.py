@@ -69,7 +69,6 @@ class Scores(metaclass=Type):
 
     def game_is_over(self):
         try:
-            self.state()
+            return self.state() == "normal" # If the game is over when the window is open
         except: 
-            return False
-        return True
+            return len(self.word_guesses) == 5 # Check if the user has guesses left when the user left midgame
