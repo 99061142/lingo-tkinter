@@ -36,6 +36,6 @@ try:
 
     from classes.app import App
 except ModuleNotFoundError as e:
-    error_message = str(e) + ", or the module is not installed"
+    error_message = str(e) + " or the module is not installed"
     print("\033[1;31m" + error_message + "\033[0m")
     exit()
