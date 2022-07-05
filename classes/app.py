@@ -17,7 +17,7 @@ class App(Keyboard, Board, EndScreen, Error):
             self.check_characters(word, row)
 
     def start(self):    
-        if not self.previous_game_over():
+        if self.previous_game_over() == False:
             self.previous_label_config()
         self.mainloop()
         
