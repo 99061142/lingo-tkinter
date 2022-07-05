@@ -8,13 +8,13 @@ else:
 class Scores(metaclass=Type):
     _file = "storage/scores.json"
 
-    def get_games(self) -> list:
+    def create_file(self):
         # Create the scores file if it wasn't created yet
-        if not os.path.exists(self._file):
-            with open(self._file, 'w') as file:
-                json.dump([], file, indent=4)
-            file.close()
+        with open(self._file, 'w') as file:
+            json.dump([], file, indent=4)
+        file.close()
 
+    def get_games(self) -> list:
         with open(self._file, "r") as file:
             data = json.load(file)
         file.close()
@@ -35,6 +35,10 @@ class Scores(metaclass=Type):
         return data
 
     def add_player_game(self):
+        # If the scores file doesn't exists
+        if not os.path.exists(self._file):
+            self.create_file()    
+
         scores = self.get_games()
         scores.append(self.create_game_data())
         
