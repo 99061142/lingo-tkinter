@@ -28,12 +28,11 @@ class Board(Window):
 
 
     def new_board(self):
+        self.round = 1 if self.previous_game_over() else self.previous_round() + 1
         self.word_guesses = [] if self.previous_game_over() else self.previous_word_guessed()
         self.board_labels = [{} for i in range(self.max_rounds)]
         self.word = self.previous_word() if self.previous_game_over() == False else word.random_word()
         self.board_columns_chars = self.get_board_columns_char()
-        self.round = 1 if self.previous_game_over() else self.previous_round() + 1
-        print(self.round)
         self.board()
 
     def board(self): 
