@@ -11,11 +11,14 @@ class Board(Window):
         self.max_rounds = 5
         self.new_board()
 
+    def get_word(self):
+        return self.previous_word() if self.previous_game_over() == False else word.random_word()
+
     def new_board(self):
         self.round = 1
         self.word_guesses = []
         self.board_labels = [{} for i in range(self.max_rounds)]
-        self.word = word.random_word()
+        self.word = self.get_word()
         self.board_columns_chars = [[tk.StringVar() for i in range(self.get_word_length())] for i in range(self.max_rounds)]
         self.board()
 
