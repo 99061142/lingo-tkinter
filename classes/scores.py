@@ -34,13 +34,12 @@ class Scores(metaclass=Type):
             "word": self.word,
             "word_guesses": self.word_guesses,
             "won": self.word_guessed(),
+            "game_over": self.game_is_over(),
             "tries": len(self.word_guesses)
         }
         return data
 
     def add_player_game(self):
-        print("test")  
-
         scores = self.get_games()
         scores.append(self.create_game_data())
         
@@ -57,6 +56,14 @@ class Scores(metaclass=Type):
         return self.get_games()[-1] if self.get_games() else None
 
     def previous_word(self):
-        previous_game = self.previous_game()
+        return self.previous_game()['word'] if self.previous_game() else None
 
-        return previous_game['word'] if previous_game else None
+    def previous_game_over(self):
+        return self.previous_game()['game_over'] if self.previous_game() else None
+
+    def game_is_over(self):
+        try:
+            self.state()
+        except: 
+            return False
+        return True
